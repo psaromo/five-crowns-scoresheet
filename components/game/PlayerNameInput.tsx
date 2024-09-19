@@ -2,15 +2,16 @@
 
 import { Dispatch, SetStateAction } from 'react';
 import { FaRegTrashAlt } from 'react-icons/fa';
-import { PrimaryButton, SecondaryButton } from '../Button';
+import { PlayersRecord } from 'app/types/Players';
+import { PrimaryButton, SecondaryButton } from 'components/Button';
 import { useFormContext } from 'react-hook-form';
 import classNames from 'classnames';
 
 interface PlayerNameInputProps {
   inputs: PlayersRecord;
   setInputs: Dispatch<SetStateAction<PlayersRecord>>;
-  completeFormStep: any;
-  resetForm: any;
+  completeFormStep: () => void;
+  resetForm: () => void;
 }
 export const PlayerNameInput = ({
   inputs,
@@ -22,8 +23,6 @@ export const PlayerNameInput = ({
     register,
     formState: { isValid },
     setValue,
-    getValues,
-    watch,
   } = useFormContext();
 
   const obj = Object.keys(inputs);
@@ -35,22 +34,22 @@ export const PlayerNameInput = ({
     const newPlayer = {
       name: '',
       scores: {
-        level3: 0,
-        level4: 0,
-        level5: 0,
-        level6: 0,
-        level7: 0,
-        level8: 0,
-        level9: 0,
-        level10: 0,
-        level11: 0,
-        level12: 0,
-        level13: 0,
+        level3: undefined,
+        level4: undefined,
+        level5: undefined,
+        level6: undefined,
+        level7: undefined,
+        level8: undefined,
+        level9: undefined,
+        level10: undefined,
+        level11: undefined,
+        level12: undefined,
+        level13: undefined,
       },
     };
 
     // Update the state with the new player
-    setInputs((prevInputs: any) => ({
+    setInputs((prevInputs) => ({
       ...prevInputs,
       [newPlayerKey]: newPlayer,
     }));
@@ -64,22 +63,22 @@ export const PlayerNameInput = ({
   };
   const startGame = () => {
     // Iterate over each player and ensure the scores are set
-    Object.keys(inputs).forEach((key, index) => {
+    Object.keys(inputs).forEach((key) => {
       // Set scores if they are not present in the form
       setValue(
         `${key}.scores`,
         {
-          level3: 0,
-          level4: 0,
-          level5: 0,
-          level6: 0,
-          level7: 0,
-          level8: 0,
-          level9: 0,
-          level10: 0,
-          level11: 0,
-          level12: 0,
-          level13: 0,
+          level3: undefined,
+          level4: undefined,
+          level5: undefined,
+          level6: undefined,
+          level7: undefined,
+          level8: undefined,
+          level9: undefined,
+          level10: undefined,
+          level11: undefined,
+          level12: undefined,
+          level13: undefined,
         },
         { shouldValidate: true, shouldDirty: true },
       );
@@ -95,9 +94,9 @@ export const PlayerNameInput = ({
           {Object.keys(inputs).map((val, index) => (
             <div key={index} className="flex items-center space-x-4">
               <input
-                className="text-primary outline-none focus:ring-offset-0 focus:border-secondary focus:ring-0 focus:ring-secondary rounded-md border w-full py-2 px-4"
+                className="font-bold text-primary outline-none focus:ring-offset-0 focus:border-secondary focus:ring-0 focus:ring-secondary rounded-md border w-full py-2 px-4"
                 type="text"
-                maxLength={30}
+                maxLength={10}
                 placeholder={`Player ${index + 1}`}
                 {...register(`player${index + 1}.name`, { required: index < 3 })}
               />

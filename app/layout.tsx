@@ -2,7 +2,7 @@ import './globals.css';
 import { Cinzel_Decorative } from 'next/font/google';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import Logo from '@/components/Logo';
+import Logo from 'components/Logo';
 
 const cinzelDecorative = Cinzel_Decorative({
   weight: ['400', '700', '900'],

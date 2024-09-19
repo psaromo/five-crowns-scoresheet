@@ -1,74 +1,79 @@
 'use client';
 
-import { PrimaryButton, SecondaryButton } from '@/components/Button';
 import { FormProvider, useForm } from 'react-hook-form';
-import { PlayerNameInput } from '@/components/game/PlayerNameInput';
-import { Scoresheet } from '@/components/game/Scoresheet';
-import { useCallback, useState } from 'react';
+import { PlayerNameInput } from 'components/game/PlayerNameInput';
+import { PlayersRecord } from 'app/types/Players';
+import { PrimaryButton, SecondaryButton } from 'components/Button';
+import { Scoresheet } from 'components/game/Scoresheet';
+import { useCallback, useEffect, useState } from 'react';
 import classNames from 'classnames';
 
 const defaultValues = {
   player1: {
     name: '',
     scores: {
-      level3: 0,
-      level4: 0,
-      level5: 0,
-      level6: 0,
-      level7: 0,
-      level8: 0,
-      level9: 0,
-      level10: 0,
-      level11: 0,
-      level12: 0,
-      level13: 0,
+      level3: undefined,
+      level4: undefined,
+      level5: undefined,
+      level6: undefined,
+      level7: undefined,
+      level8: undefined,
+      level9: undefined,
+      level10: undefined,
+      level11: undefined,
+      level12: undefined,
+      level13: undefined,
     },
   },
   player2: {
     name: '',
     scores: {
-      level3: 0,
-      level4: 0,
-      level5: 0,
-      level6: 0,
-      level7: 0,
-      level8: 0,
-      level9: 0,
-      level10: 0,
-      level11: 0,
-      level12: 0,
-      level13: 0,
+      level3: undefined,
+      level4: undefined,
+      level5: undefined,
+      level6: undefined,
+      level7: undefined,
+      level8: undefined,
+      level9: undefined,
+      level10: undefined,
+      level11: undefined,
+      level12: undefined,
+      level13: undefined,
     },
   },
   player3: {
     name: '',
     scores: {
-      level3: 0,
-      level4: 0,
-      level5: 0,
-      level6: 0,
-      level7: 0,
-      level8: 0,
-      level9: 0,
-      level10: 0,
-      level11: 0,
-      level12: 0,
-      level13: 0,
+      level3: undefined,
+      level4: undefined,
+      level5: undefined,
+      level6: undefined,
+      level7: undefined,
+      level8: undefined,
+      level9: undefined,
+      level10: undefined,
+      level11: undefined,
+      level12: undefined,
+      level13: undefined,
     },
   },
 };
 
+interface SortedPlayers {
+  name: string;
+  totalScore: any;
+}
 export default function Dashboard() {
-  const methods = useForm<any>({
+  const methods = useForm<PlayersRecord>({
     mode: 'all',
     defaultValues,
   });
 
   const {
+    getValues,
     formState: { isValid },
     handleSubmit,
     reset,
-    getValues,
   } = methods;
 
   const [formStep, setFormStep] = useState(0);
@@ -88,13 +93,35 @@ export default function Dashboard() {
   const resetForm = useCallback(() => {
     reset();
     setInputs(initialInputs);
-  }, [reset, setFormStep]);
+  }, [reset, initialInputs]);
 
-  const submitGame = () => {};
+  const [sortedPlayers, setSortedPlayers] = useState<SortedPlayers[]>([]);
+  const [isGameFinished, setIsGameFinished] = useState<boolean>(false);
+  const submitGame = () => {
+    setIsGameFinished(true);
+    completeFormStep();
+  };
+
+  const results = getValues();
+
+  useEffect(() => {
+    if (isGameFinished) {
+      setSortedPlayers(
+        Object.entries(results)
+          .map(([key, result]) => ({
+            name: result.name,
+            totalScore: Object.values(result.scores).reduce((acc, score) => acc + (score || 0), 0),
+          }))
+          .sort((a, b) => b.totalScore - a.totalScore),
+      );
+    }
+  }, [isGameFinished, results]);
+
+  console.log(sortedPlayers);
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(submitGame)}>
+      <form onSubmit={handleSubmit(submitGame)} className="flex justify-center items-center">
         {currentAndPrevSteps.includes('start') && (
           <div
             className={classNames(
@@ -112,11 +139,36 @@ export default function Dashboard() {
               'flex flex-col justify-center items-start space-y-4',
             )}
           >
-            <Scoresheet {...{ setInputs }} />
+            <Scoresheet />
             <div className="flex space-x-4">
               <SecondaryButton text="Back" onClick={previousFormStep} />
-              <PrimaryButton text="Finish Game" disabled={!isValid} type="submit" />
+              <SecondaryButton text="Clear" onClick={resetForm} />
+              <PrimaryButton text="Finish Game" disabled={!isValid} onClick={submitGame} />
             </div>
+          </div>
+        )}
+        {currentAndPrevSteps.includes('end') && (
+          <div
+            className={classNames(
+              { hidden: formStep != formStates.indexOf('end') },
+              'flex flex-col justify-center items-start space-y-4',
+            )}
+          >
+            {isGameFinished && (
+              <div>
+                <div className="flex">{`Winner: ${sortedPlayers[0].name}`} 🎉</div>
+                <div>Total Scores: </div>
+                {sortedPlayers.map((player, index) => (
+                  <div key={index}>
+                    {player.name}: {player.totalScore}
+                  </div>
+                ))}
+                <div className="flex space-x-4">
+                  <SecondaryButton text="Back" onClick={previousFormStep} />
+                  <SecondaryButton text="Play again" onClick={resetForm} />
+                </div>
+              </div>
+            )}
           </div>
         )}
       </form>
