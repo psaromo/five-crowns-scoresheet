@@ -24,9 +24,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${cinzelDecorative.variable}`}>
-      <body className="p-10">
+      <body>
         <div className="space-y-8">
-          <div className="flex flex-col justify-center items-center">
+          <div className="flex flex-col justify-center items-center p-10">
             <div className="font-cinzel font-bold text-5xl text-center">Five Crowns Scoresheet</div>
             <div className="py-8">
               <Link href="/">

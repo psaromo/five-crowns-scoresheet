@@ -25,7 +25,9 @@ export const PlayerNameInput = ({
     getValues,
     watch,
   } = useFormContext();
+
   const obj = Object.keys(inputs);
+
   // Handle click to add a new input field
   const addInput = () => {
     const nextIndex = Object.keys(inputs).length + 1;
@@ -56,16 +58,35 @@ export const PlayerNameInput = ({
 
   // Handle removing an input field by index
   const removeInput = (index: number) => {
-    setInputs((prevInputs: any) => {
-      return prevInputs.filter((_: any, i: any) => i !== index);
+    const newInputs = { ...inputs };
+    delete newInputs[`player${index + 1}`]; // Delete the player key
+    setInputs(newInputs);
+  };
+  const startGame = () => {
+    // Iterate over each player and ensure the scores are set
+    Object.keys(inputs).forEach((key, index) => {
+      // Set scores if they are not present in the form
+      setValue(
+        `${key}.scores`,
+        {
+          level3: 0,
+          level4: 0,
+          level5: 0,
+          level6: 0,
+          level7: 0,
+          level8: 0,
+          level9: 0,
+          level10: 0,
+          level11: 0,
+          level12: 0,
+          level13: 0,
+        },
+        { shouldValidate: true, shouldDirty: true },
+      );
     });
-  };
 
-  const startGame = (data: any) => {
-    console.log('Form Data:', data);
+    completeFormStep(); // Proceed to next form step
   };
-
-  console.log(inputs, 'Object.keys(inputs)');
 
   return (
     <>
@@ -81,22 +102,22 @@ export const PlayerNameInput = ({
                 {...register(`player${index + 1}.name`, { required: index < 3 })}
               />
               <button
-                className={classNames({ 'opacity-50': obj.length == 3 })}
+                className={classNames({ 'opacity-50': obj.length === 3 })}
                 type="button"
                 onClick={() => removeInput(index)}
-                disabled={obj.length == 3}
+                disabled={obj.length === 3}
               >
                 <FaRegTrashAlt />
               </button>
             </div>
           ))}
-          <PrimaryButton text="Add Player" onClick={addInput} disabled={obj.length == 7} />
+          <PrimaryButton text="Add Player" onClick={addInput} disabled={obj.length === 7} />
           <div className="flex space-x-4">
             <PrimaryButton
               text="Start Game"
               disabled={!isValid}
               type="button"
-              onClick={completeFormStep}
+              onClick={startGame} // Call the custom function
             />
             <SecondaryButton text="Reset" onClick={resetForm} />
           </div>
