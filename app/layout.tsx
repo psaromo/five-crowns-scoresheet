@@ -27,14 +27,14 @@ export default function RootLayout({
       <body className="p-10">
         <div className="space-y-8">
           <div className="flex flex-col justify-center items-center">
-            <div className="font-cinzel font-bold text-5xl">Five Crowns Scoresheet</div>
-            <div className="py-4">
+            <div className="font-cinzel font-bold text-5xl text-center">Five Crowns Scoresheet</div>
+            <div className="py-8">
               <Link href="/">
                 <Logo />
               </Link>
             </div>
+            {children}
           </div>
-          {children}
         </div>
       </body>
     </html>

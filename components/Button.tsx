@@ -6,7 +6,8 @@ interface ButtonProps {
   disabled?: boolean;
   type?: 'button' | 'submit' | 'reset' | undefined;
 }
-const PrimaryButton = ({ text, onClick, disabled, type = 'button' }: ButtonProps) => {
+
+export const PrimaryButton = ({ text, onClick, disabled, type = 'button' }: ButtonProps) => {
   return (
     <button
       onClick={onClick}
@@ -22,4 +23,18 @@ const PrimaryButton = ({ text, onClick, disabled, type = 'button' }: ButtonProps
   );
 };
 
-export default PrimaryButton;
+export const SecondaryButton = ({ text, onClick, disabled, type = 'button' }: ButtonProps) => {
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      className={classNames(
+        { 'opacity-50 cursor-not-allowed': disabled },
+        'bg-secondary text-white font-semibold rounded-md p-2',
+      )}
+      type={type}
+    >
+      {text}
+    </button>
+  );
+};
