@@ -5,13 +5,63 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { PlayerNameInput } from '@/components/game/PlayerNameInput';
 import { Scoresheet } from '@/components/game/Scoresheet';
 import { useCallback, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import classNames from 'classnames';
+
+const defaultValues = {
+  player1: {
+    name: '',
+    scores: {
+      level3: 0,
+      level4: 0,
+      level5: 0,
+      level6: 0,
+      level7: 0,
+      level8: 0,
+      level9: 0,
+      level10: 0,
+      level11: 0,
+      level12: 0,
+      level13: 0,
+    },
+  },
+  player2: {
+    name: '',
+    scores: {
+      level3: 0,
+      level4: 0,
+      level5: 0,
+      level6: 0,
+      level7: 0,
+      level8: 0,
+      level9: 0,
+      level10: 0,
+      level11: 0,
+      level12: 0,
+      level13: 0,
+    },
+  },
+  player3: {
+    name: '',
+    scores: {
+      level3: 0,
+      level4: 0,
+      level5: 0,
+      level6: 0,
+      level7: 0,
+      level8: 0,
+      level9: 0,
+      level10: 0,
+      level11: 0,
+      level12: 0,
+      level13: 0,
+    },
+  },
+};
 
 export default function Dashboard() {
   const methods = useForm<any>({
     mode: 'all',
-    defaultValues: { players: [] },
+    defaultValues,
   });
 
   const {
@@ -20,8 +70,6 @@ export default function Dashboard() {
     reset,
     getValues,
   } = methods;
-
-  const router = useRouter();
 
   const [formStep, setFormStep] = useState(0);
   const formStates = ['start', 'scoresheet', 'end'];
@@ -34,8 +82,8 @@ export default function Dashboard() {
     setFormStep((cur) => cur - 1);
   }, [setFormStep]);
 
-  const initialInputs = ['input1', 'input2', 'input3'];
-  const [inputs, setInputs] = useState(initialInputs);
+  const initialInputs = defaultValues;
+  const [inputs, setInputs] = useState<PlayersRecord>(initialInputs);
 
   const resetForm = useCallback(() => {
     reset();
@@ -54,16 +102,7 @@ export default function Dashboard() {
               'flex flex-col justify-center items-start space-y-4',
             )}
           >
-            <PlayerNameInput {...{ inputs, setInputs }} />
-            <div className="flex space-x-4">
-              <PrimaryButton
-                text="Start Game"
-                disabled={!isValid}
-                type="button"
-                onClick={completeFormStep}
-              />
-              <SecondaryButton text="Reset" onClick={resetForm} />
-            </div>
+            <PlayerNameInput {...{ inputs, setInputs, completeFormStep, resetForm }} />
           </div>
         )}
         {currentAndPrevSteps.includes('scoresheet') && (
@@ -73,7 +112,7 @@ export default function Dashboard() {
               'flex flex-col justify-center items-start space-y-4',
             )}
           >
-            <Scoresheet />
+            <Scoresheet {...{ setInputs }} />
             <div className="flex space-x-4">
               <SecondaryButton text="Back" onClick={previousFormStep} />
               <PrimaryButton text="Finish Game" disabled={!isValid} type="submit" />
