@@ -8,6 +8,7 @@ import classNames from 'classnames';
 interface PlayerNameInputProps {
   playerNameInputs: PlayersRecord;
   setPlayerNameInputs: Dispatch<SetStateAction<PlayersRecord>>;
+  setDefaultValues: Dispatch<SetStateAction<PlayersRecord>>;
   completeFormStep: () => void;
   resetForm: () => void;
 }
@@ -15,6 +16,7 @@ interface PlayerNameInputProps {
 export const PlayerNameInput = ({
   playerNameInputs,
   setPlayerNameInputs,
+  setDefaultValues,
   completeFormStep,
   resetForm,
 }: PlayerNameInputProps) => {
@@ -24,7 +26,6 @@ export const PlayerNameInput = ({
     formState: { isValid },
   } = useFormContext();
   const playerKeys = Object.keys(playerNameInputs);
-  const values = getValues();
 
   // Handle click to add a new input field
   const addPlayerNameInput = () => {
@@ -48,29 +49,28 @@ export const PlayerNameInput = ({
     };
 
     // Update the state with the new player
-    setPlayerNameInputs((prevInputs) => ({
-      ...prevInputs,
+    setPlayerNameInputs((prevPlayerNameInput) => ({
+      ...prevPlayerNameInput,
       [newPlayerKey]: newPlayer,
     }));
   };
 
-  // Handle removing an input field by index
-  const removePlayerNameInput = (index: number) => {
-    const newInputs = { ...playerNameInputs };
-    delete newInputs[`player${index + 1}`];
-    setPlayerNameInputs(newInputs);
+  // Handle removing an input field by key
+  const removePlayerNameInput = (key: string) => {
+    setPlayerNameInputs((prevInputs) => {
+      const { [key]: removedPlayer, ...remainingPlayers } = prevInputs;
+      return remainingPlayers; // Return the remaining players without the removed one
+    });
   };
 
   const startGame = () => {
-    const registeredPlayers = getValues();
-    setPlayerNameInputs(registeredPlayers);
     completeFormStep();
   };
 
   return (
     <div className="flex flex-col justify-center items-center space-y-4">
       <div className="flex flex-col space-y-4">
-        {Object.keys(playerNameInputs).map((val, index) => (
+        {Object.keys(playerNameInputs).map((key, index) => (
           <div key={index} className="flex items-center space-x-4">
             <input
               className="font-bold text-primary outline-none focus:ring-offset-0 focus:border-secondary focus:ring-0 focus:ring-secondary rounded-md border w-full py-2 px-4"
@@ -82,7 +82,7 @@ export const PlayerNameInput = ({
             <button
               className={classNames({ 'opacity-50': playerKeys.length === 2 })}
               type="button"
-              onClick={() => removePlayerNameInput(index)}
+              onClick={() => removePlayerNameInput(key)}
               disabled={playerKeys.length === 2}
             >
               <FaRegTrashAlt />

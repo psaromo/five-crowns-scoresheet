@@ -19,10 +19,11 @@ export default function Dashboard() {
   const startingPlayers = initialPlayers();
 
   const [playerNameInputs, setPlayerNameInputs] = useState<PlayersRecord>(startingPlayers);
+  const [defaultValues, setDefaultValues] = useState<PlayersRecord>(startingPlayers);
 
   const methods = useForm<PlayersRecord>({
     mode: 'all',
-    defaultValues: playerNameInputs,
+    defaultValues,
   });
 
   const {
@@ -54,8 +55,8 @@ export default function Dashboard() {
   }, []);
 
   const playAgainHandler = useCallback(() => {
-    setFormStep(1);
-  }, []);
+    previousFormStep();
+  }, [previousFormStep]);
 
   const [sortedPlayers, setSortedPlayers] = useState<SortedPlayers[]>([]);
   const [isGameFinished, setIsGameFinished] = useState<boolean>(false);
@@ -82,6 +83,7 @@ export default function Dashboard() {
               {...{
                 playerNameInputs,
                 setPlayerNameInputs,
+                setDefaultValues,
                 completeFormStep,
                 resetForm,
               }}
