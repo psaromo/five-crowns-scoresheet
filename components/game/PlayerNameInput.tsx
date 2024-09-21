@@ -8,14 +8,14 @@ import { useFormContext } from 'react-hook-form';
 import classNames from 'classnames';
 
 interface PlayerNameInputProps {
-  inputs: PlayersRecord;
-  setInputs: Dispatch<SetStateAction<PlayersRecord>>;
+  playerNameInputs: PlayersRecord;
+  setPlayerNameInputs: Dispatch<SetStateAction<PlayersRecord>>;
   completeFormStep: () => void;
   resetForm: () => void;
 }
 export const PlayerNameInput = ({
-  inputs,
-  setInputs,
+  playerNameInputs,
+  setPlayerNameInputs,
   completeFormStep,
   resetForm,
 }: PlayerNameInputProps) => {
@@ -25,11 +25,11 @@ export const PlayerNameInput = ({
     setValue,
   } = useFormContext();
 
-  const obj = Object.keys(inputs);
+  const obj = Object.keys(playerNameInputs);
 
   // Handle click to add a new input field
   const addInput = () => {
-    const nextIndex = Object.keys(inputs).length + 1;
+    const nextIndex = Object.keys(playerNameInputs).length + 1;
     const newPlayerKey = `player${nextIndex}`;
     const newPlayer = {
       name: '',
@@ -49,7 +49,7 @@ export const PlayerNameInput = ({
     };
 
     // Update the state with the new player
-    setInputs((prevInputs) => ({
+    setPlayerNameInputs((prevInputs) => ({
       ...prevInputs,
       [newPlayerKey]: newPlayer,
     }));
@@ -57,13 +57,13 @@ export const PlayerNameInput = ({
 
   // Handle removing an input field by index
   const removeInput = (index: number) => {
-    const newInputs = { ...inputs };
+    const newInputs = { ...playerNameInputs };
     delete newInputs[`player${index + 1}`]; // Delete the player key
-    setInputs(newInputs);
+    setPlayerNameInputs(newInputs);
   };
   const startGame = () => {
     // Iterate over each player and ensure the scores are set
-    Object.keys(inputs).forEach((key) => {
+    Object.keys(playerNameInputs).forEach((key) => {
       // Set scores if they are not present in the form
       setValue(
         `${key}.scores`,
@@ -91,7 +91,7 @@ export const PlayerNameInput = ({
     <>
       <div className="flex flex-col justify-center items-center space-y-4">
         <div className="flex flex-col space-y-4">
-          {Object.keys(inputs).map((val, index) => (
+          {Object.keys(playerNameInputs).map((val, index) => (
             <div key={index} className="flex items-center space-x-4">
               <input
                 className="font-bold text-primary outline-none focus:ring-offset-0 focus:border-secondary focus:ring-0 focus:ring-secondary rounded-md border w-full py-2 px-4"
@@ -116,7 +116,7 @@ export const PlayerNameInput = ({
               text="Start Game"
               disabled={!isValid}
               type="button"
-              onClick={startGame} // Call the custom function
+              onClick={startGame}
             />
             <SecondaryButton text="Reset" onClick={resetForm} />
           </div>
