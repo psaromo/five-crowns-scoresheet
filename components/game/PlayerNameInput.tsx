@@ -8,7 +8,6 @@ import classNames from 'classnames';
 interface PlayerNameInputProps {
   playerNameInputs: PlayersRecord;
   setPlayerNameInputs: Dispatch<SetStateAction<PlayersRecord>>;
-  setDefaultValues: Dispatch<SetStateAction<PlayersRecord>>;
   completeFormStep: () => void;
   resetForm: () => void;
 }
@@ -16,7 +15,6 @@ interface PlayerNameInputProps {
 export const PlayerNameInput = ({
   playerNameInputs,
   setPlayerNameInputs,
-  setDefaultValues,
   completeFormStep,
   resetForm,
 }: PlayerNameInputProps) => {
@@ -26,10 +24,11 @@ export const PlayerNameInput = ({
     formState: { isValid },
   } = useFormContext();
   const playerKeys = Object.keys(playerNameInputs);
+  const values = getValues();
 
   // Handle click to add a new input field
   const addPlayerNameInput = () => {
-    const nextIndex = Object.keys(playerNameInputs).length + 1;
+    const nextIndex = playerKeys.length + 1;
     const newPlayerKey = `player${nextIndex}`;
     const newPlayer = {
       name: '',
@@ -64,9 +63,7 @@ export const PlayerNameInput = ({
 
   const startGame = () => {
     const registeredPlayers = getValues();
-    console.log(registeredPlayers, 'registered');
     setPlayerNameInputs(registeredPlayers);
-    setDefaultValues(registeredPlayers);
     completeFormStep();
   };
 
