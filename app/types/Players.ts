@@ -1,114 +1,23 @@
-export interface PlayerNameInputField {
-  player1: {
-    name: string | '';
-    scores: {
-      level3: number;
-      level4: number;
-      level5: number;
-      level6: number;
-      level7: number;
-      level8: number;
-      level9: number;
-      level10: number;
-      level11: number;
-      level12: number;
-      level13: number;
-    };
-  };
-  player2: {
-    name: string | '';
-    scores: {
-      level3: number;
-      level4: number;
-      level5: number;
-      level6: number;
-      level7: number;
-      level8: number;
-      level9: number;
-      level10: number;
-      level11: number;
-      level12: number;
-      level13: number;
-    };
-  };
-  player3: {
-    name: string | '';
-    scores: {
-      level3: number;
-      level4: number;
-      level5: number;
-      level6: number;
-      level7: number;
-      level8: number;
-      level9: number;
-      level10: number;
-      level11: number;
-      level12: number;
-      level13: number;
-    };
-  };
-  player4?: {
-    name: string | '';
-    scores: {
-      level3: number;
-      level4: number;
-      level5: number;
-      level6: number;
-      level7: number;
-      level8: number;
-      level9: number;
-      level10: number;
-      level11: number;
-      level12: number;
-      level13: number;
-    };
-  };
-  player5?: {
-    name: string | '';
-    scores: {
-      level3: number;
-      level4: number;
-      level5: number;
-      level6: number;
-      level7: number;
-      level8: number;
-      level9: number;
-      level10: number;
-      level11: number;
-      level12: number;
-      level13: number;
-    };
-  };
-  player6?: {
-    name: string | '';
-    scores: {
-      level3: number;
-      level4: number;
-      level5: number;
-      level6: number;
-      level7: number;
-      level8: number;
-      level9: number;
-      level10: number;
-      level11: number;
-      level12: number;
-      level13: number;
-    };
-  };
-  player7?: {
-    name: string | '';
-    scores: {
-      level3: number;
-      level4: number;
-      level5: number;
-      level6: number;
-      level7: number;
-      level8: number;
-      level9: number;
-      level10: number;
-      level11: number;
-      level12: number;
-      level13: number;
-    };
-  };
+type Score = number | undefined;
+export interface Scores {
+  level3: Score;
+  level4: Score;
+  level5: Score;
+  level6: Score;
+  level7: Score;
+  level8: Score;
+  level9: Score;
+  level10: Score;
+  level11: Score;
+  level12: Score;
+  level13: Score;
+}
+
+export interface Player {
+  name: string;
+  scores: Scores;
+}
+
+export interface PlayersRecord {
+  [key: string]: Player;
 }
