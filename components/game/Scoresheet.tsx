@@ -4,7 +4,7 @@ import { FaCrown, FaMagic } from 'react-icons/fa';
 export const Scoresheet = () => {
   const { register, getValues } = useFormContext();
   const values = getValues();
-  const scoreIndices = Object.keys(values.player1.scores);
+  const wildCards = [3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K'];
 
   return (
     <div className="overflow-x-auto w-96 md:w-full max-w-4/5">
@@ -28,17 +28,17 @@ export const Scoresheet = () => {
           </tr>
         </thead>
         <tbody>
-          {scoreIndices.map((level, index) => (
-            <tr key={index}>
+          {wildCards.map((wildCard, index) => (
+            <tr key={wildCard}>
               <td className="font-bold text-xl text-center p-2 sticky left-0 bg-primary border-b z-20">
-                {index + 3}
+                {wildCard}
               </td>
               {Object.entries(values).map(([key, value]) => (
                 <td key={key} className="p-2 border-b text-center w-36">
                   <input
                     type="number"
                     className="outline-none focus:ring-offset-0 focus:border-secondary focus:ring-0 focus:ring-secondary rounded-md border w-24 text-center font-bold text-primary"
-                    {...register(`${key}.scores.${level}`, { valueAsNumber: true })}
+                    {...register(`${key}.scores.${index + 3}`, { valueAsNumber: true })}
                   />
                 </td>
               ))}
