@@ -1,5 +1,3 @@
-'use client';
-
 import { Dispatch, SetStateAction } from 'react';
 import { FaRegTrashAlt } from 'react-icons/fa';
 import { PlayersRecord } from 'app/types/Players';
@@ -13,6 +11,7 @@ interface PlayerNameInputProps {
   completeFormStep: () => void;
   resetForm: () => void;
 }
+
 export const PlayerNameInput = ({
   playerNameInputs,
   setPlayerNameInputs,
@@ -61,6 +60,7 @@ export const PlayerNameInput = ({
     delete newInputs[`player${index + 1}`]; // Delete the player key
     setPlayerNameInputs(newInputs);
   };
+
   const startGame = () => {
     // Iterate over each player and ensure the scores are set
     Object.keys(playerNameInputs).forEach((key) => {
