@@ -18,6 +18,7 @@ export default function Dashboard() {
   const rank = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th'];
   const startingPlayers = initialPlayers();
 
+  const [playerNameInputs, setPlayerNameInputs] = useState<PlayersRecord>(startingPlayers);
   const [defaultValues, setDefaultValues] = useState<PlayersRecord>(startingPlayers);
 
   const methods = useForm<PlayersRecord>({
@@ -43,17 +44,18 @@ export default function Dashboard() {
     setFormStep((cur) => cur - 1);
   }, [setFormStep]);
 
-  const [playerNameInputs, setPlayerNameInputs] = useState<PlayersRecord>(startingPlayers);
-
   const resetForm = useCallback(() => {
     reset();
     setPlayerNameInputs(startingPlayers);
-    setFormStep(1);
   }, [reset, startingPlayers]);
 
   const submitGame = useCallback(() => {
     setIsGameFinished(true);
     completeFormStep();
+  }, []);
+
+  const playAgainHandler = useCallback(() => {
+    setFormStep(1);
   }, []);
 
   const [sortedPlayers, setSortedPlayers] = useState<SortedPlayers[]>([]);
@@ -78,7 +80,13 @@ export default function Dashboard() {
             )}
           >
             <PlayerNameInput
-              {...{ playerNameInputs, setPlayerNameInputs, completeFormStep, resetForm }}
+              {...{
+                playerNameInputs,
+                setPlayerNameInputs,
+                setDefaultValues,
+                completeFormStep,
+                resetForm,
+              }}
             />
           </div>
         )}
@@ -92,7 +100,6 @@ export default function Dashboard() {
             <Scoresheet />
             <div className="flex space-x-4">
               <SecondaryButton text="Back" onClick={previousFormStep} />
-              <SecondaryButton text="Clear" onClick={resetForm} />
               <PrimaryButton
                 text="Finish Game"
                 disabled={!isValid}
@@ -141,7 +148,7 @@ export default function Dashboard() {
                       previousFormStep();
                     }}
                   />
-                  <PrimaryButton text="Play again" onClick={resetForm} />
+                  <PrimaryButton text="Play again" onClick={playAgainHandler} />
                 </div>
               </div>
             )}
