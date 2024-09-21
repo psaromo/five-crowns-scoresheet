@@ -54,10 +54,6 @@ export default function Dashboard() {
     completeFormStep();
   }, []);
 
-  const playAgainHandler = useCallback(() => {
-    previousFormStep();
-  }, [previousFormStep]);
-
   const [sortedPlayers, setSortedPlayers] = useState<SortedPlayers[]>([]);
   const [isGameFinished, setIsGameFinished] = useState<boolean>(false);
 
@@ -148,7 +144,12 @@ export default function Dashboard() {
                       previousFormStep();
                     }}
                   />
-                  <PrimaryButton text="Play again" onClick={playAgainHandler} />
+                  <PrimaryButton
+                    text="Play again"
+                    onClick={() => {
+                      setFormStep(0);
+                    }}
+                  />
                 </div>
               </div>
             )}

@@ -16,12 +16,10 @@ interface PlayerNameInputProps {
 export const PlayerNameInput = ({
   playerNameInputs,
   setPlayerNameInputs,
-  setDefaultValues,
   completeFormStep,
   resetForm,
 }: PlayerNameInputProps) => {
   const {
-    getValues,
     register,
     formState: { isValid },
   } = useFormContext();
