@@ -30,7 +30,7 @@ export const SecondaryButton = ({ text, onClick, disabled, type = 'button' }: Bu
       disabled={disabled}
       className={classNames(
         { 'opacity-50 cursor-not-allowed': disabled },
-        'bg-secondary text-white font-semibold rounded-md p-2',
+        'border-2 border-secondary text-white font-semibold rounded-md p-2 hover:bg-secondary hover:text-primary',
       )}
       type={type}
     >

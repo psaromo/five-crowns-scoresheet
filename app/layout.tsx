@@ -1,8 +1,7 @@
 import './globals.css';
 import { Cinzel_Decorative } from 'next/font/google';
 import type { Metadata } from 'next';
-import Link from 'next/link';
-import Logo from 'components/Logo';
+import Image from 'next/image';
 
 const cinzelDecorative = Cinzel_Decorative({
   weight: ['400', '700', '900'],
@@ -28,9 +27,7 @@ export default function RootLayout({
         <div className="flex flex-col min-h-screen m-10">
           <div className="flex flex-col justify-center items-center space-y-8">
             <div className="font-bold text-5xl text-center">Five Crowns Scoresheet</div>
-            <Link href="/">
-              <Logo />
-            </Link>
+            <Image alt="five-crowns-logo" src={'/five-crowns-logo.jpg'} width={400} height={100} />
           </div>
           {children}
         </div>
