@@ -90,7 +90,7 @@ export const PlayerNameInput = ({
         <PrimaryButton
           text="Add Player"
           onClick={addPlayerNameInput}
-          disabled={playerKeys.length === 7}
+          disabled={playerKeys.length === 21}
         />
         <div className="flex space-x-4">
           <SecondaryButton text="Reset" onClick={resetForm} />
