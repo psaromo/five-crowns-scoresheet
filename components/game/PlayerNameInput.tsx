@@ -39,15 +39,6 @@ export const PlayerNameInput = ({ nextFormStep, resetForm }: PlayerNameInputProp
     setValue(`players[${index}]`, undefined);
   };
 
-  const handleInputChange = (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
-    const newInputList = [...inputList];
-    newInputList[index] = event.target.value;
-    setInputList(newInputList);
-
-    // Update the form state with the new value
-    setValue(`players[${index}]`, event.target.value);
-  };
-
   const startGame = () => {
     const currentPlayers: Player[] = getValues('players');
     const updatedPlayers = currentPlayers
@@ -83,9 +74,9 @@ export const PlayerNameInput = ({ nextFormStep, resetForm }: PlayerNameInputProp
                 className="font-bold text-primary outline-none focus:ring-offset-0 focus:border-secondary focus:ring-0 focus:ring-secondary rounded-md border w-full py-2 px-4"
                 type="text"
                 maxLength={10}
-                value={input}
-                {...register(`players[${index}].name`, { required: index < MIN_PLAYERS })}
-                onChange={(event) => handleInputChange(index, event)}
+                {...register(`players[${index}].name`, {
+                  required: index < MIN_PLAYERS, // Only required for the first two inputs
+                })}
                 placeholder={`Player ${index + 1}`}
               />
             </div>
