@@ -19,6 +19,9 @@ export const PlayerNameInput = ({
   completeFormStep,
   resetForm,
 }: PlayerNameInputProps) => {
+  const MIN_PLAYERS = 2;
+  const MAX_PLAYERS = 21;
+
   const {
     register,
     formState: { isValid },
@@ -75,13 +78,13 @@ export const PlayerNameInput = ({
               type="text"
               maxLength={10}
               placeholder={`Player ${index + 1}`}
-              {...register(`player${index + 1}.name`, { required: index < 2 })}
+              {...register(`player${index + 1}.name`, { required: index < MIN_PLAYERS })}
             />
             <button
-              className={classNames({ 'opacity-50': playerKeys.length === 2 })}
+              className={classNames({ 'opacity-50': playerKeys.length === MIN_PLAYERS })}
               type="button"
               onClick={() => removePlayerNameInput(key)}
-              disabled={playerKeys.length === 2}
+              disabled={playerKeys.length === MIN_PLAYERS}
             >
               <FaRegTrashAlt />
             </button>
@@ -90,8 +93,11 @@ export const PlayerNameInput = ({
         <PrimaryButton
           text="Add Player"
           onClick={addPlayerNameInput}
-          disabled={playerKeys.length === 21}
+          disabled={playerKeys.length === MAX_PLAYERS}
         />
+        {playerKeys.length === MAX_PLAYERS && (
+          <div className="text-sm">Maximum number of 21 players has been reached.</div>
+        )}
         <div className="flex space-x-4">
           <SecondaryButton text="Reset" onClick={resetForm} />
           <PrimaryButton text="Start Game" onClick={startGame} disabled={!isValid} />
