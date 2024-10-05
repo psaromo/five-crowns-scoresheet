@@ -69,7 +69,7 @@ export const PlayerNameInput = ({
   };
 
   return (
-    <div className="flex flex-col justify-center items-center space-y-4">
+    <div className="flex flex-col justify-center items-center space-y-4 w-72">
       <div className="flex flex-col space-y-4">
         {Object.keys(playerNameInputs).map((key, index) => (
           <div key={index} className="flex items-center space-x-4">
@@ -96,7 +96,7 @@ export const PlayerNameInput = ({
           disabled={playerKeys.length === MAX_PLAYERS}
         />
         {playerKeys.length === MAX_PLAYERS && (
-          <div className="text-sm">Maximum number of 21 players has been reached.</div>
+          <div className="text-sm">Maximum number of {MAX_PLAYERS} players has been reached.</div>
         )}
         <div className="flex space-x-4">
           <SecondaryButton text="Reset" onClick={resetForm} />
