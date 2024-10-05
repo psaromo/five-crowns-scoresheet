@@ -1,6 +1,6 @@
 'use client';
 
-import { calculateScoresAndSort } from 'app/utils/utils';
+import { calculateScoresAndSort, rank } from 'app/utils/utils';
 import { FormProvider, useForm } from 'react-hook-form';
 import { PlayerNameInput } from 'components/game/PlayerNameInput';
 import { PrimaryButton, SecondaryButton } from 'components/Button';
@@ -14,8 +14,6 @@ interface SortedPlayers {
 }
 
 export default function Dashboard() {
-  const rank = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th'];
-
   const methods = useForm({
     mode: 'all',
     defaultValues: { players: [] },
@@ -81,11 +79,11 @@ export default function Dashboard() {
           <div
             className={classNames(
               { hidden: formStep != formStates.indexOf('scoresheet') },
-              'flex flex-col justify-center items-start space-y-4',
+              'flex flex-col justify-center items-start space-y-4 overflow-x-auto',
             )}
           >
             <Scoresheet />
-            <div className="flex space-x-4">
+            <div className="flex space-x-4 absolute bottom-0">
               <SecondaryButton text="Back" onClick={previousFormStep} />
               <PrimaryButton
                 text="Finish Game"
