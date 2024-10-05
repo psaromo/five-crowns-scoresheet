@@ -1,9 +1,9 @@
 'use client';
 
-import { calculateScoresAndSort, initialPlayers } from 'app/utils/utils';
+import { calculateScoresAndSort, rank } from 'app/utils/utils';
 import { FormProvider, useForm } from 'react-hook-form';
+import { Player } from 'app/types/Players';
 import { PlayerNameInput } from 'components/game/PlayerNameInput';
-import { PlayersRecord } from 'app/types/Players';
 import { PrimaryButton, SecondaryButton } from 'components/Button';
 import { Scoresheet } from 'components/game/Scoresheet';
 import { useCallback, useEffect, useState } from 'react';
@@ -15,29 +15,24 @@ interface SortedPlayers {
 }
 
 export default function Dashboard() {
-  const rank = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th'];
-  const startingPlayers = initialPlayers();
-
-  const [playerNameInputs, setPlayerNameInputs] = useState<PlayersRecord>(startingPlayers);
-  const [defaultValues, setDefaultValues] = useState<PlayersRecord>(startingPlayers);
-
-  const methods = useForm<PlayersRecord>({
+  const methods = useForm({
     mode: 'all',
-    defaultValues,
+    defaultValues: { players: [] },
   });
 
   const {
     getValues,
+    setValue,
     formState: { isValid },
     handleSubmit,
     reset,
   } = methods;
 
-  const [formStep, setFormStep] = useState(0);
+  const [formStep, setFormStep] = useState<number>(0);
   const formStates = ['start', 'scoresheet', 'end'];
   const currentAndPrevSteps = formStates.slice(0, formStep + 1);
 
-  const completeFormStep = useCallback(() => {
+  const nextFormStep = useCallback(() => {
     setFormStep((cur) => cur + 1);
   }, [setFormStep]);
   const previousFormStep = useCallback(() => {
@@ -46,19 +41,41 @@ export default function Dashboard() {
 
   const resetForm = useCallback(() => {
     reset();
-    setPlayerNameInputs(startingPlayers);
-  }, [reset, startingPlayers]);
+  }, [reset]);
 
   const submitGame = useCallback(() => {
     setIsGameFinished(true);
-    completeFormStep();
+    nextFormStep();
+  }, []);
+
+  const playAgain = useCallback(() => {
+    const allPlayers: Player[] = getValues('players');
+    const updatedPlayers = allPlayers.map((player) => ({
+      ...player,
+      scores: {
+        level3: NaN,
+        level4: NaN,
+        level5: NaN,
+        level6: NaN,
+        level7: NaN,
+        level8: NaN,
+        level9: NaN,
+        level10: NaN,
+        level11: NaN,
+        level12: NaN,
+        level13: NaN,
+      },
+    }));
+    setValue('players', updatedPlayers as any);
+    setIsGameFinished(false);
+    previousFormStep();
   }, []);
 
   const [sortedPlayers, setSortedPlayers] = useState<SortedPlayers[]>([]);
   const [isGameFinished, setIsGameFinished] = useState<boolean>(false);
 
   useEffect(() => {
-    const results = getValues();
+    const results = getValues('players');
     if (isGameFinished) {
       const calculation = calculateScoresAndSort(results);
       setSortedPlayers(calculation);
@@ -77,10 +94,7 @@ export default function Dashboard() {
           >
             <PlayerNameInput
               {...{
-                playerNameInputs,
-                setPlayerNameInputs,
-                setDefaultValues,
-                completeFormStep,
+                nextFormStep,
                 resetForm,
               }}
             />
@@ -90,18 +104,18 @@ export default function Dashboard() {
           <div
             className={classNames(
               { hidden: formStep != formStates.indexOf('scoresheet') },
-              'flex flex-col justify-center items-start space-y-4',
+              'flex flex-col justify-center items-start space-y-4 overflow-x-auto',
             )}
           >
             <Scoresheet />
-            <div className="flex space-x-4">
+            <div className="flex space-x-4 absolute bottom-0">
               <SecondaryButton text="Back" onClick={previousFormStep} />
               <PrimaryButton
                 text="Finish Game"
                 disabled={!isValid}
                 onClick={() => {
                   setIsGameFinished(true);
-                  completeFormStep();
+                  nextFormStep();
                 }}
               />
             </div>
@@ -128,7 +142,7 @@ export default function Dashboard() {
                   </thead>
                   <tbody>
                     {sortedPlayers.map((player, index) => (
-                      <tr>
+                      <tr key={player.name}>
                         <td className="text-center">{rank[index]}</td>
                         <td className="text-center">{player.name}</td>
                         <td className="text-center">{player.totalScore}</td>
@@ -144,12 +158,7 @@ export default function Dashboard() {
                       previousFormStep();
                     }}
                   />
-                  <PrimaryButton
-                    text="Play again"
-                    onClick={() => {
-                      setFormStep(0);
-                    }}
-                  />
+                  <PrimaryButton text="Play again" onClick={playAgain} />
                 </div>
               </div>
             )}

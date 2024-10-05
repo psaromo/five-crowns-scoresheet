@@ -1,87 +1,90 @@
-import { Dispatch, SetStateAction } from 'react';
-import { FaRegTrashAlt } from 'react-icons/fa';
-import { PlayersRecord } from 'app/types/Players';
-import { PrimaryButton, SecondaryButton } from 'components/Button';
-import { useFormContext } from 'react-hook-form';
+import { Player } from 'app/types/Players';
 import classNames from 'classnames';
+import { PrimaryButton, SecondaryButton } from 'components/Button';
+import { useState } from 'react';
+import { useFormContext } from 'react-hook-form';
+import { FaRegTrashAlt } from 'react-icons/fa';
 
 interface PlayerNameInputProps {
-  playerNameInputs: PlayersRecord;
-  setPlayerNameInputs: Dispatch<SetStateAction<PlayersRecord>>;
-  setDefaultValues: Dispatch<SetStateAction<PlayersRecord>>;
-  completeFormStep: () => void;
+  nextFormStep: () => void;
   resetForm: () => void;
 }
 
-export const PlayerNameInput = ({
-  playerNameInputs,
-  setPlayerNameInputs,
-  completeFormStep,
-  resetForm,
-}: PlayerNameInputProps) => {
+const MIN_PLAYERS = 2;
+const MAX_PLAYERS = 21;
+
+export const PlayerNameInput = ({ nextFormStep, resetForm }: PlayerNameInputProps) => {
   const {
     register,
+    getValues,
+    setValue,
     formState: { isValid },
   } = useFormContext();
-  const playerKeys = Object.keys(playerNameInputs);
 
-  // Handle click to add a new input field
-  const addPlayerNameInput = () => {
-    const nextIndex = playerKeys.length + 1;
-    const newPlayerKey = `player${nextIndex}`;
-    const newPlayer = {
-      name: '',
-      scores: {
-        level3: undefined,
-        level4: undefined,
-        level5: undefined,
-        level6: undefined,
-        level7: undefined,
-        level8: undefined,
-        level9: undefined,
-        level10: undefined,
-        level11: undefined,
-        level12: undefined,
-        level13: undefined,
-      },
-    };
+  const [inputList, setInputList] = useState<string[]>(['', '']);
 
-    // Update the state with the new player
-    setPlayerNameInputs((prevPlayerNameInput) => ({
-      ...prevPlayerNameInput,
-      [newPlayerKey]: newPlayer,
-    }));
+  // Function to handle adding a new input box
+  const handleAddInput = () => {
+    const newIndex = inputList.length;
+    setInputList([...inputList, '']);
+    setValue(`players[${newIndex}]`, ''); // Register a new input in the form state
   };
 
-  // Handle removing an input field by key
-  const removePlayerNameInput = (key: string) => {
-    setPlayerNameInputs((prevInputs) => {
-      const { [key]: removedPlayer, ...remainingPlayers } = prevInputs;
-      return remainingPlayers; // Return the remaining players without the removed one
-    });
+  const handleDeleteInput = (index: number) => {
+    const newInputList = [...inputList];
+    newInputList.splice(index, 1); // Remove the input at the specified index
+    setInputList(newInputList);
+
+    // Remove the corresponding input value from the form state
+    setValue(`players[${index}]`, undefined);
   };
 
   const startGame = () => {
-    completeFormStep();
+    const currentPlayers: Player[] = getValues('players');
+    const updatedPlayers = currentPlayers
+      .filter((player) => player && player.name)
+      .map((player, index) => ({
+        id: `${player.name}+${index + 1}`,
+        ...player, // Keep all existing properties (in this case, just `name`)
+        scores: {
+          level3: NaN,
+          level4: NaN,
+          level5: NaN,
+          level6: NaN,
+          level7: NaN,
+          level8: NaN,
+          level9: NaN,
+          level10: NaN,
+          level11: NaN,
+          level12: NaN,
+          level13: NaN,
+        },
+      }));
+    setValue('players', updatedPlayers);
+    nextFormStep();
   };
 
   return (
-    <div className="flex flex-col justify-center items-center space-y-4">
+    <div className="flex flex-col justify-center items-center space-y-4 w-72">
       <div className="flex flex-col space-y-4">
-        {Object.keys(playerNameInputs).map((key, index) => (
+        {inputList.map((input, index) => (
           <div key={index} className="flex items-center space-x-4">
-            <input
-              className="font-bold text-primary outline-none focus:ring-offset-0 focus:border-secondary focus:ring-0 focus:ring-secondary rounded-md border w-full py-2 px-4"
-              type="text"
-              maxLength={10}
-              placeholder={`Player ${index + 1}`}
-              {...register(`player${index + 1}.name`, { required: index < 2 })}
-            />
+            <div key={index}>
+              <input
+                className="font-bold text-primary outline-none focus:ring-offset-0 focus:border-secondary focus:ring-0 focus:ring-secondary rounded-md border w-full py-2 px-4"
+                type="text"
+                maxLength={10}
+                {...register(`players[${index}].name`, {
+                  required: index < MIN_PLAYERS, // Only required for the first two inputs
+                })}
+                placeholder={`Player ${index + 1}`}
+              />
+            </div>
             <button
-              className={classNames({ 'opacity-50': playerKeys.length === 2 })}
+              className={classNames({ 'opacity-50': inputList.length === MIN_PLAYERS })}
               type="button"
-              onClick={() => removePlayerNameInput(key)}
-              disabled={playerKeys.length === 2}
+              onClick={() => handleDeleteInput(index)}
+              disabled={inputList.length === MIN_PLAYERS}
             >
               <FaRegTrashAlt />
             </button>
@@ -89,8 +92,8 @@ export const PlayerNameInput = ({
         ))}
         <PrimaryButton
           text="Add Player"
-          onClick={addPlayerNameInput}
-          disabled={playerKeys.length === 7}
+          onClick={handleAddInput}
+          disabled={inputList.length === MAX_PLAYERS}
         />
         <div className="flex space-x-4">
           <SecondaryButton text="Reset" onClick={resetForm} />

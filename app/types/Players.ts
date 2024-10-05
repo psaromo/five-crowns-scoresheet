@@ -14,6 +14,7 @@ export interface Scores {
 }
 
 export interface Player {
+  id?: string;
   name: string;
   scores: Scores;
 }
