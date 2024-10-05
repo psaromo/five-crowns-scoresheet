@@ -16,7 +16,7 @@ interface SortedPlayers {
 export default function Dashboard() {
   const rank = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th'];
 
-  const methods = useForm<any>({
+  const methods = useForm({
     mode: 'all',
     defaultValues: { players: [] },
   });
@@ -28,7 +28,7 @@ export default function Dashboard() {
     reset,
   } = methods;
 
-  const [formStep, setFormStep] = useState(0);
+  const [formStep, setFormStep] = useState<number>(0);
   const formStates = ['start', 'scoresheet', 'end'];
   const currentAndPrevSteps = formStates.slice(0, formStep + 1);
 

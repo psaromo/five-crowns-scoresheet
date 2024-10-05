@@ -1,3 +1,4 @@
+import { Player } from 'app/types/Players';
 import { useFormContext } from 'react-hook-form';
 import { FaCrown, FaMagic } from 'react-icons/fa';
 
@@ -17,7 +18,7 @@ const wildCards = [
 
 export const Scoresheet = () => {
   const { register, getValues } = useFormContext();
-  const players = getValues('players');
+  const players: Player[] = getValues('players');
 
   return (
     <div className="overflow-x-auto w-96 lg:w-[100rem]">
@@ -30,7 +31,7 @@ export const Scoresheet = () => {
                 <h2 className="text-lg font-bold">Wild Card</h2>
               </div>
             </th>
-            {players.map(({ id, name }: any) => (
+            {players.map(({ id, name }) => (
               <th key={id} className="sticky top-0 bg-primary z-10 w-36">
                 <div className="flex flex-col justify-center items-center space-y-1">
                   <FaCrown />

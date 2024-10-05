@@ -1,3 +1,4 @@
+import { Player } from 'app/types/Players';
 import classNames from 'classnames';
 import { PrimaryButton, SecondaryButton } from 'components/Button';
 import { useState } from 'react';
@@ -48,10 +49,10 @@ export const PlayerNameInput = ({ nextFormStep, resetForm }: PlayerNameInputProp
   };
 
   const startGame = () => {
-    const currentPlayers = getValues('players');
+    const currentPlayers: Player[] = getValues('players');
     const updatedPlayers = currentPlayers
-      .filter((player: any) => player && player.name)
-      .map((player: any, index: number) => ({
+      .filter((player) => player && player.name)
+      .map((player, index) => ({
         id: `${player.name}+${index + 1}`,
         ...player, // Keep all existing properties (in this case, just `name`)
         scores: {

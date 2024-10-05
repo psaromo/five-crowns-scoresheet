@@ -1,6 +1,6 @@
-import { PlayersRecord } from 'app/types/Players';
+import { Player, PlayersRecord } from 'app/types/Players';
 
-export const calculateScoresAndSort = (playersRecord: PlayersRecord[]) => {
+export const calculateScoresAndSort = (playersRecord: Player[]) => {
   // // Convert the players object to an array for easier manipulation
   const playerArray = playersRecord.map((player) => {
     // Calculate total score for each player (ignore null scores)
