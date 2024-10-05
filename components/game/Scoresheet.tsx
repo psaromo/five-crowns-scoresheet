@@ -17,10 +17,10 @@ const wildCards = [
 
 export const Scoresheet = () => {
   const { register, getValues } = useFormContext();
-  const values = getValues();
+  const players = getValues('players');
 
   return (
-    <div className="overflow-x-auto w-96 md:w-full max-w-4/5">
+    <div className="overflow-x-auto w-96 lg:w-[100rem]">
       <table>
         <thead>
           <tr>
@@ -30,11 +30,11 @@ export const Scoresheet = () => {
                 <h2 className="text-lg font-bold">Wild Card</h2>
               </div>
             </th>
-            {Object.entries(values).map(([key, player]) => (
-              <th key={key} className="sticky top-0 bg-primary z-10 w-36">
+            {players.map(({ id, name }: any) => (
+              <th key={id} className="sticky top-0 bg-primary z-10 w-36">
                 <div className="flex flex-col justify-center items-center space-y-1">
                   <FaCrown />
-                  <h2 className="text-lg font-bold">{player.name}</h2>
+                  <h2 className="text-lg font-bold">{name}</h2>
                 </div>
               </th>
             ))}
@@ -46,12 +46,12 @@ export const Scoresheet = () => {
               <td className="font-bold text-xl text-center p-2 sticky left-0 bg-primary border-b z-20">
                 {display}
               </td>
-              {Object.entries(values).map(([key, value]) => (
-                <td key={key} className="p-2 border-b text-center w-36">
+              {players.map(({ id }: any, index: number) => (
+                <td key={id} className="p-2 border-b text-center w-36">
                   <input
                     type="number"
                     className="outline-none focus:ring-offset-0 focus:border-secondary focus:ring-0 focus:ring-secondary rounded-md border w-24 text-center font-bold text-primary"
-                    {...register(`${key}.scores.${level}`, {
+                    {...register(`players[${index}].scores.${level}`, {
                       min: 0,
                       valueAsNumber: true,
                     })}

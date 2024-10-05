@@ -1,8 +1,8 @@
 import { PlayersRecord } from 'app/types/Players';
 
-export const calculateScoresAndSort = (playersRecord: PlayersRecord) => {
-  // Convert the players object to an array for easier manipulation
-  const playerArray = Object.values(playersRecord).map((player) => {
+export const calculateScoresAndSort = (playersRecord: PlayersRecord[]) => {
+  // // Convert the players object to an array for easier manipulation
+  const playerArray = playersRecord.map((player) => {
     // Calculate total score for each player (ignore null scores)
     const totalScore = Object.values(player.scores).reduce((sum, score) => {
       return !Number.isNaN(score) ? sum + score : sum;
@@ -11,7 +11,7 @@ export const calculateScoresAndSort = (playersRecord: PlayersRecord) => {
     return { name: player.name, totalScore };
   });
 
-  // Sort the players by their total score from low to high
+  // // Sort the players by their total score from low to high
   playerArray.sort((a, b) => a.totalScore - b.totalScore);
 
   return playerArray;

@@ -1,9 +1,8 @@
 'use client';
 
-import { calculateScoresAndSort, initialPlayers } from 'app/utils/utils';
+import { calculateScoresAndSort } from 'app/utils/utils';
 import { FormProvider, useForm } from 'react-hook-form';
 import { PlayerNameInput } from 'components/game/PlayerNameInput';
-import { PlayersRecord } from 'app/types/Players';
 import { PrimaryButton, SecondaryButton } from 'components/Button';
 import { Scoresheet } from 'components/game/Scoresheet';
 import { useCallback, useEffect, useState } from 'react';
@@ -16,14 +15,10 @@ interface SortedPlayers {
 
 export default function Dashboard() {
   const rank = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th'];
-  const startingPlayers = initialPlayers();
 
-  const [playerNameInputs, setPlayerNameInputs] = useState<PlayersRecord>(startingPlayers);
-  const [defaultValues, setDefaultValues] = useState<PlayersRecord>(startingPlayers);
-
-  const methods = useForm<PlayersRecord>({
+  const methods = useForm<any>({
     mode: 'all',
-    defaultValues,
+    defaultValues: { players: [] },
   });
 
   const {
@@ -37,7 +32,7 @@ export default function Dashboard() {
   const formStates = ['start', 'scoresheet', 'end'];
   const currentAndPrevSteps = formStates.slice(0, formStep + 1);
 
-  const completeFormStep = useCallback(() => {
+  const nextFormStep = useCallback(() => {
     setFormStep((cur) => cur + 1);
   }, [setFormStep]);
   const previousFormStep = useCallback(() => {
@@ -46,19 +41,18 @@ export default function Dashboard() {
 
   const resetForm = useCallback(() => {
     reset();
-    setPlayerNameInputs(startingPlayers);
-  }, [reset, startingPlayers]);
+  }, [reset]);
 
   const submitGame = useCallback(() => {
     setIsGameFinished(true);
-    completeFormStep();
+    nextFormStep();
   }, []);
 
   const [sortedPlayers, setSortedPlayers] = useState<SortedPlayers[]>([]);
   const [isGameFinished, setIsGameFinished] = useState<boolean>(false);
 
   useEffect(() => {
-    const results = getValues();
+    const results = getValues('players');
     if (isGameFinished) {
       const calculation = calculateScoresAndSort(results);
       setSortedPlayers(calculation);
@@ -77,10 +71,7 @@ export default function Dashboard() {
           >
             <PlayerNameInput
               {...{
-                playerNameInputs,
-                setPlayerNameInputs,
-                setDefaultValues,
-                completeFormStep,
+                nextFormStep,
                 resetForm,
               }}
             />
@@ -101,7 +92,7 @@ export default function Dashboard() {
                 disabled={!isValid}
                 onClick={() => {
                   setIsGameFinished(true);
-                  completeFormStep();
+                  nextFormStep();
                 }}
               />
             </div>
