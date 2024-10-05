@@ -2,6 +2,7 @@
 
 import { calculateScoresAndSort, rank } from 'app/utils/utils';
 import { FormProvider, useForm } from 'react-hook-form';
+import { Player } from 'app/types/Players';
 import { PlayerNameInput } from 'components/game/PlayerNameInput';
 import { PrimaryButton, SecondaryButton } from 'components/Button';
 import { Scoresheet } from 'components/game/Scoresheet';
@@ -21,6 +22,7 @@ export default function Dashboard() {
 
   const {
     getValues,
+    setValue,
     formState: { isValid },
     handleSubmit,
     reset,
@@ -56,6 +58,28 @@ export default function Dashboard() {
       setSortedPlayers(calculation);
     }
   }, [isGameFinished]);
+
+  const playAgain = () => {
+    const allPlayers: Player[] = getValues('players');
+    const updatedPlayers = allPlayers.map((player) => ({
+      ...player,
+      scores: {
+        level3: undefined,
+        level4: undefined,
+        level5: undefined,
+        level6: undefined,
+        level7: undefined,
+        level8: undefined,
+        level9: undefined,
+        level10: undefined,
+        level11: undefined,
+        level12: undefined,
+        level13: undefined,
+      },
+    }));
+    setValue('players', updatedPlayers as any);
+    previousFormStep();
+  };
 
   return (
     <FormProvider {...methods}>
@@ -133,12 +157,7 @@ export default function Dashboard() {
                       previousFormStep();
                     }}
                   />
-                  <PrimaryButton
-                    text="Play again"
-                    onClick={() => {
-                      setFormStep(0);
-                    }}
-                  />
+                  <PrimaryButton text="Play again" onClick={playAgain} />
                 </div>
               </div>
             )}
