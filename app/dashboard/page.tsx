@@ -48,6 +48,29 @@ export default function Dashboard() {
     nextFormStep();
   }, []);
 
+  const playAgain = useCallback(() => {
+    const allPlayers: Player[] = getValues('players');
+    const updatedPlayers = allPlayers.map((player) => ({
+      ...player,
+      scores: {
+        level3: NaN,
+        level4: NaN,
+        level5: NaN,
+        level6: NaN,
+        level7: NaN,
+        level8: NaN,
+        level9: NaN,
+        level10: NaN,
+        level11: NaN,
+        level12: NaN,
+        level13: NaN,
+      },
+    }));
+    setValue('players', updatedPlayers as any);
+    setIsGameFinished(false);
+    previousFormStep();
+  }, []);
+
   const [sortedPlayers, setSortedPlayers] = useState<SortedPlayers[]>([]);
   const [isGameFinished, setIsGameFinished] = useState<boolean>(false);
 
@@ -58,28 +81,6 @@ export default function Dashboard() {
       setSortedPlayers(calculation);
     }
   }, [isGameFinished]);
-
-  const playAgain = () => {
-    const allPlayers: Player[] = getValues('players');
-    const updatedPlayers = allPlayers.map((player) => ({
-      ...player,
-      scores: {
-        level3: undefined,
-        level4: undefined,
-        level5: undefined,
-        level6: undefined,
-        level7: undefined,
-        level8: undefined,
-        level9: undefined,
-        level10: undefined,
-        level11: undefined,
-        level12: undefined,
-        level13: undefined,
-      },
-    }));
-    setValue('players', updatedPlayers as any);
-    previousFormStep();
-  };
 
   return (
     <FormProvider {...methods}>
@@ -141,7 +142,7 @@ export default function Dashboard() {
                   </thead>
                   <tbody>
                     {sortedPlayers.map((player, index) => (
-                      <tr>
+                      <tr key={player.name}>
                         <td className="text-center">{rank[index]}</td>
                         <td className="text-center">{player.name}</td>
                         <td className="text-center">{player.totalScore}</td>

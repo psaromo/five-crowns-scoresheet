@@ -47,17 +47,17 @@ export const PlayerNameInput = ({ nextFormStep, resetForm }: PlayerNameInputProp
         id: `${player.name}+${index + 1}`,
         ...player, // Keep all existing properties (in this case, just `name`)
         scores: {
-          level3: undefined,
-          level4: undefined,
-          level5: undefined,
-          level6: undefined,
-          level7: undefined,
-          level8: undefined,
-          level9: undefined,
-          level10: undefined,
-          level11: undefined,
-          level12: undefined,
-          level13: undefined,
+          level3: NaN,
+          level4: NaN,
+          level5: NaN,
+          level6: NaN,
+          level7: NaN,
+          level8: NaN,
+          level9: NaN,
+          level10: NaN,
+          level11: NaN,
+          level12: NaN,
+          level13: NaN,
         },
       }));
     setValue('players', updatedPlayers);
