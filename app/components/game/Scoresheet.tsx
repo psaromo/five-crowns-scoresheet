@@ -1,7 +1,7 @@
-import { FaCrown, FaMagic } from 'react-icons/fa';
-import { Player } from 'types/Players';
-import { useFormContext } from 'react-hook-form';
 import { wildCards } from 'lib/constants';
+import { FaCrown, FaMagic } from 'react-icons/fa';
+import { GameFormValues } from 'types/Players';
+import { useFormContext } from 'react-hook-form';
 import classNames from 'classnames';
 
 export const Scoresheet = () => {
@@ -9,7 +9,7 @@ export const Scoresheet = () => {
     register,
     getValues,
     formState: { errors },
-  } = useFormContext<{ players: Player[] }>();
+  } = useFormContext<GameFormValues>();
   const players = getValues('players');
 
   return (

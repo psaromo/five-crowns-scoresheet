@@ -1,6 +1,6 @@
-import { FaRegTrashAlt } from 'react-icons/fa';
 import { MAX_PLAYERS, MIN_PLAYERS } from 'lib/constants';
-import { Player } from 'types/Players';
+import { FaRegTrashAlt } from 'react-icons/fa';
+import { GameFormValues } from 'types/Players';
 import { PrimaryButton, SecondaryButton } from 'components/Button';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import classNames from 'classnames';
@@ -16,13 +16,13 @@ export const PlayerNameInput = ({ nextFormStep, resetForm }: PlayerNameInputProp
     register,
     trigger,
     formState: { errors, isValid },
-  } = useFormContext<{ players: Player[] }>();
+  } = useFormContext<GameFormValues>();
 
   const {
     fields: playerNamesFields,
     append,
     remove,
-  } = useFieldArray<{ players: Player[] }>({
+  } = useFieldArray<GameFormValues>({
     control,
     name: 'players',
     rules: { minLength: 2 },
@@ -32,8 +32,8 @@ export const PlayerNameInput = ({ nextFormStep, resetForm }: PlayerNameInputProp
     <div className="flex flex-col justify-center items-center space-y-4 w-72">
       <div className="flex flex-col space-y-4">
         {playerNamesFields.map((field, index) => (
-          <div className="space-y-1">
-            <div key={field.id} className="flex items-center space-x-4">
+          <div key={field.id} className="space-y-1">
+            <div className="flex items-center space-x-4">
               <input
                 className={classNames(
                   { 'border-red-700': errors.players?.[index]?.name },

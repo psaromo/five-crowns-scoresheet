@@ -1,4 +1,7 @@
+export type GameFormValues = { players: Player[] };
+
 type Score = number | undefined;
+
 export interface Scores {
   level3: Score;
   level4: Score;
