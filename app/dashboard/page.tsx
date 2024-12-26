@@ -1,18 +1,14 @@
 'use client';
 
+import { calculateScoresAndSort } from 'lib/utils';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Player } from 'types/Players';
 import { PlayerNameInput } from 'components/game/PlayerNameInput';
 import { PrimaryButton, SecondaryButton } from 'components/Button';
 import { rank } from 'lib/constants';
 import { Scoresheet } from 'components/game/Scoresheet';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import classNames from 'classnames';
-
-interface SortedPlayers {
-  name: string;
-  totalScore: number;
-}
 
 export default function Dashboard() {
   const methods = useForm<{ players: Player[] }>({
@@ -56,11 +52,28 @@ export default function Dashboard() {
   });
 
   const {
+    setValue,
     getValues,
     formState: { isValid },
     handleSubmit,
     reset,
   } = methods;
+
+  const [sortedPlayers, setSortedPlayers] = useState<
+    {
+      name: string | null;
+      totalScore: number;
+    }[]
+  >([]);
+  const [isGameFinished, setIsGameFinished] = useState<boolean>(false);
+
+  useEffect(() => {
+    const results = getValues('players');
+    if (isGameFinished) {
+      const calculation = calculateScoresAndSort(results);
+      setSortedPlayers(calculation);
+    }
+  }, [isGameFinished]);
 
   const [formStep, setFormStep] = useState<number>(0);
   const formStates = ['start', 'scoresheet', 'end'];
@@ -80,24 +93,38 @@ export default function Dashboard() {
   const submitGame = useCallback(() => {
     setIsGameFinished(true);
     nextFormStep();
-  }, []);
+  }, [setIsGameFinished, nextFormStep]);
 
-  const playAgain = useCallback(() => {
-    reset();
+  const resetScores = useCallback(() => {
+    const players = getValues('players');
+    const updatedPlayersScores = players.map((player) => {
+      return {
+        name: player.name,
+        scores: {
+          level3: 0,
+          level4: 0,
+          level5: 0,
+          level6: 0,
+          level7: 0,
+          level8: 0,
+          level9: 0,
+          level10: 0,
+          level11: 0,
+          level12: 0,
+          level13: 0,
+        },
+      };
+    });
+    setValue('players', updatedPlayersScores);
     setIsGameFinished(false);
     previousFormStep();
-  }, []);
+  }, [setValue, getValues, setIsGameFinished, previousFormStep]);
 
-  const [sortedPlayers, setSortedPlayers] = useState<SortedPlayers[]>([]);
-  const [isGameFinished, setIsGameFinished] = useState<boolean>(false);
-
-  // useEffect(() => {
-  //   const results = getValues('players');
-  //   if (isGameFinished) {
-  //     const calculation = calculateScoresAndSort(results);
-  //     setSortedPlayers(calculation);
-  //   }
-  // }, [isGameFinished]);
+  const restartGame = useCallback(() => {
+    reset();
+    setIsGameFinished(false);
+    setFormStep(0);
+  }, [reset, setIsGameFinished, setFormStep]);
 
   return (
     <FormProvider {...methods}>
@@ -127,14 +154,7 @@ export default function Dashboard() {
             <Scoresheet />
             <div className="flex space-x-4 absolute bottom-0">
               <SecondaryButton text="Back" onClick={previousFormStep} />
-              <PrimaryButton
-                text="Finish Game"
-                disabled={!isValid}
-                onClick={() => {
-                  setIsGameFinished(true);
-                  nextFormStep();
-                }}
-              />
+              <PrimaryButton type="submit" text="Finish Game" disabled={!isValid} />
             </div>
           </div>
         )}
@@ -175,7 +195,8 @@ export default function Dashboard() {
                       previousFormStep();
                     }}
                   />
-                  <PrimaryButton text="Play again" onClick={playAgain} />
+                  <PrimaryButton text="Reset scores" onClick={resetScores} />
+                  <PrimaryButton text="Restart game" onClick={restartGame} />
                 </div>
               </div>
             )}
