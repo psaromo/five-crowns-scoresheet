@@ -36,8 +36,8 @@ export const PlayerNameInput = ({ nextFormStep, resetForm }: PlayerNameInputProp
             <div className="flex items-center space-x-4">
               <input
                 className={classNames(
-                  { 'border-red-700': errors.players?.[index]?.name },
-                  'font-bold text-primary outline-none focus:ring-offset-0 focus:border-secondary focus:ring-0 focus:ring-secondary rounded-md border w-full py-2 px-4',
+                  errors.players?.[index]?.name ? 'border-red-700' : 'border-secondary',
+                  'font-bold text-primary outline-none border-2 focus:border-secondary rounded-md w-full py-2 px-4',
                 )}
                 type="text"
                 maxLength={10}

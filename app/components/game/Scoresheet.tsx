@@ -39,7 +39,7 @@ export const Scoresheet = () => {
       <tbody>
         {wildCards.map(({ level, display }) => (
           <tr key={level}>
-            <td className="font-bold text-xl text-center p-2 sticky left-0 bg-primary border-b z-20">
+            <td className="py-2 font-bold text-xl text-center sticky left-0 bg-primary border-b z-20">
               {display}
             </td>
             {playersFields.map((field, index) => {
@@ -48,10 +48,10 @@ export const Scoresheet = () => {
                   <input
                     type="number"
                     className={classNames(
-                      {
-                        'border-red-700': errors.players?.[index]?.scores?.[level],
-                      },
-                      'outline-none focus:ring-offset-0 focus:border-secondary focus:ring-0 focus:ring-secondary rounded-md border w-24 text-center font-bold text-primary',
+                      errors.players?.[index]?.scores?.[level]
+                        ? 'border-red-700'
+                        : 'border-secondary',
+                      'font-bold text-primary outline-none border-2 focus:border-secondary rounded-md w-24 text-center',
                     )}
                     {...register(`players[${index}].scores.${level}` as 'players', {
                       valueAsNumber: true,

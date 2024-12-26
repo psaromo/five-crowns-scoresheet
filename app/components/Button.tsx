@@ -14,7 +14,7 @@ export const PrimaryButton = ({ text, onClick, disabled, type = 'button' }: Butt
       disabled={disabled}
       className={classNames(
         { 'opacity-50 cursor-not-allowed': disabled },
-        'bg-secondary text-primary font-semibold rounded-md p-2',
+        'bg-secondary text-primary font-semibold rounded-md p-2 hover:text-white',
       )}
       type={type}
     >

@@ -146,7 +146,7 @@ export default function Dashboard() {
             )}
           >
             <Scoresheet />
-            <div className="flex space-x-4 absolute bottom-0">
+            <div className="flex space-x-4 absolute bottom-20">
               <SecondaryButton text="Back" onClick={previousFormStep} />
               <PrimaryButton type="submit" text="Finish Game" disabled={!isValid} />
             </div>
@@ -156,40 +156,33 @@ export default function Dashboard() {
           <div
             className={classNames(
               { hidden: formStep != formStates.indexOf('end') },
-              'flex flex-col justify-center items-start space-y-4',
+              'flex flex-col justify-center items-center space-y-4',
             )}
           >
-            <div className="space-y-4">
-              <div className="space-x-2 text-2xl">
-                <span className="font-bold">Winner:</span>
-                <span>{sortedPlayers[0]?.name} 🎉</span>
-              </div>
-              <table>
-                <thead className="font-bold text-xl">
-                  <th className="">RANK</th>
-                  <th className="px-10">NAME</th>
-                  <th className="">SCORE</th>
-                </thead>
-                <tbody>
-                  {sortedPlayers.map((player, index) => (
-                    <tr key={player.name}>
-                      <td className="text-center">{rank[index]}</td>
-                      <td className="text-center">{player.name}</td>
-                      <td className="text-center">{player.totalScore}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              <div className="flex space-x-4">
-                <SecondaryButton
-                  text="Back"
-                  onClick={() => {
-                    previousFormStep();
-                  }}
-                />
-                <PrimaryButton text="Reset scores" onClick={resetScores} />
-                <PrimaryButton text="Restart game" onClick={restartGame} />
-              </div>
+            <div className="space-x-2 text-3xl">
+              <span className="font-bold">Winner:</span>
+              <span>{sortedPlayers[0]?.name} 🎉</span>
+            </div>
+            <table>
+              <thead className="font-bold text-xl">
+                <th className="">RANK</th>
+                <th className="px-10">NAME</th>
+                <th className="">SCORE</th>
+              </thead>
+              <tbody>
+                {sortedPlayers.map((player, index) => (
+                  <tr key={player.name} className="border-b text-lg">
+                    <td className="text-center p-2">{rank[index]}</td>
+                    <td className="text-center p-2">{player.name}</td>
+                    <td className="text-center p-2">{player.totalScore}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div className="flex space-x-4">
+              <SecondaryButton text="Back" onClick={previousFormStep} />
+              <PrimaryButton text="Reset scores" onClick={resetScores} />
+              <PrimaryButton text="Restart game" onClick={restartGame} />
             </div>
           </div>
         )}

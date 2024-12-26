@@ -23,14 +23,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${cinzelDecorative.variable}`}>
-      <body className="font-cinzel w-screen">
-        <div className="flex flex-col min-h-screen m-10">
-          <div className="flex flex-col justify-center items-center space-y-8">
-            <div className="font-bold text-5xl text-center">Five Crowns Scoresheet</div>
-            <Image alt="five-crowns-logo" src={'/five-crowns-logo.jpg'} width={400} height={100} />
+      <body className="font-cinzel m-10">
+        <div className="flex flex-col items-center justify-center space-y-5 my-10">
+          <div className="font-bold text-3xl whitespace-nowrap text-center">
+            Five Crowns Scoresheet
           </div>
-          {children}
+          <Image alt="five-crowns-logo" src={'/five-crowns-logo.jpg'} width={300} height={100} />
         </div>
+        <div>{children}</div>
       </body>
     </html>
   );
