@@ -1,12 +1,12 @@
 'use client';
 
-import { calculateScoresAndSort, rank } from 'app/utils/utils';
 import { FormProvider, useForm } from 'react-hook-form';
-import { Player } from 'app/types/Players';
+import { Player } from 'types/Players';
 import { PlayerNameInput } from 'components/game/PlayerNameInput';
 import { PrimaryButton, SecondaryButton } from 'components/Button';
+import { rank } from 'lib/utils';
 import { Scoresheet } from 'components/game/Scoresheet';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import classNames from 'classnames';
 
 interface SortedPlayers {
@@ -15,14 +15,48 @@ interface SortedPlayers {
 }
 
 export default function Dashboard() {
-  const methods = useForm({
+  const methods = useForm<{ players: Player[] }>({
     mode: 'all',
-    defaultValues: { players: [] },
+    defaultValues: {
+      players: [
+        {
+          name: null,
+          scores: {
+            level3: undefined,
+            level4: undefined,
+            level5: undefined,
+            level6: undefined,
+            level7: undefined,
+            level8: undefined,
+            level9: undefined,
+            level10: undefined,
+            level11: undefined,
+            level12: undefined,
+            level13: undefined,
+          },
+        },
+        {
+          name: null,
+          scores: {
+            level3: undefined,
+            level4: undefined,
+            level5: undefined,
+            level6: undefined,
+            level7: undefined,
+            level8: undefined,
+            level9: undefined,
+            level10: undefined,
+            level11: undefined,
+            level12: undefined,
+            level13: undefined,
+          },
+        },
+      ],
+    },
   });
 
   const {
     getValues,
-    setValue,
     formState: { isValid },
     handleSubmit,
     reset,
@@ -49,24 +83,7 @@ export default function Dashboard() {
   }, []);
 
   const playAgain = useCallback(() => {
-    const allPlayers: Player[] = getValues('players');
-    const updatedPlayers = allPlayers.map((player) => ({
-      ...player,
-      scores: {
-        level3: NaN,
-        level4: NaN,
-        level5: NaN,
-        level6: NaN,
-        level7: NaN,
-        level8: NaN,
-        level9: NaN,
-        level10: NaN,
-        level11: NaN,
-        level12: NaN,
-        level13: NaN,
-      },
-    }));
-    setValue('players', updatedPlayers as any);
+    reset();
     setIsGameFinished(false);
     previousFormStep();
   }, []);
@@ -74,13 +91,13 @@ export default function Dashboard() {
   const [sortedPlayers, setSortedPlayers] = useState<SortedPlayers[]>([]);
   const [isGameFinished, setIsGameFinished] = useState<boolean>(false);
 
-  useEffect(() => {
-    const results = getValues('players');
-    if (isGameFinished) {
-      const calculation = calculateScoresAndSort(results);
-      setSortedPlayers(calculation);
-    }
-  }, [isGameFinished]);
+  // useEffect(() => {
+  //   const results = getValues('players');
+  //   if (isGameFinished) {
+  //     const calculation = calculateScoresAndSort(results);
+  //     setSortedPlayers(calculation);
+  //   }
+  // }, [isGameFinished]);
 
   return (
     <FormProvider {...methods}>

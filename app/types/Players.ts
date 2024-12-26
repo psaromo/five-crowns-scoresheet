@@ -14,11 +14,6 @@ export interface Scores {
 }
 
 export interface Player {
-  id?: string;
-  name: string;
+  name: string | null;
   scores: Scores;
-}
-
-export interface PlayersRecord {
-  [key: string]: Player;
 }
