@@ -4,7 +4,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { Player } from 'types/Players';
 import { PlayerNameInput } from 'components/game/PlayerNameInput';
 import { PrimaryButton, SecondaryButton } from 'components/Button';
-import { rank } from 'lib/utils';
+import { rank } from 'lib/constants';
 import { Scoresheet } from 'components/game/Scoresheet';
 import { useCallback, useState } from 'react';
 import classNames from 'classnames';

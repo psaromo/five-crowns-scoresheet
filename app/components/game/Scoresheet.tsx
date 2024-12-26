@@ -1,20 +1,7 @@
+import { FaCrown, FaMagic } from 'react-icons/fa';
 import { Player } from 'types/Players';
 import { useFieldArray, useFormContext } from 'react-hook-form';
-import { FaCrown, FaMagic } from 'react-icons/fa';
-
-const wildCards = [
-  { id: 'level3', display: '3' },
-  { id: 'level4', display: '4' },
-  { id: 'level5', display: '5' },
-  { id: 'level6', display: '6' },
-  { id: 'level7', display: '7' },
-  { id: 'level8', display: '8' },
-  { id: 'level9', display: '9' },
-  { id: 'level10', display: '10' },
-  { id: 'level11', display: 'J' },
-  { id: 'level12', display: 'Q' },
-  { id: 'level13', display: 'K' },
-];
+import { wildCards } from 'lib/constants';
 
 export const Scoresheet = () => {
   const { control, register } = useFormContext<{ players: Player[] }>();
@@ -23,7 +10,6 @@ export const Scoresheet = () => {
     name: 'players',
   });
 
-  console.log(playerFields, 'playerFields');
   return (
     <table>
       <thead>

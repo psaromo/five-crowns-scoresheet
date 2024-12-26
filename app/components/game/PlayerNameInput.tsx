@@ -1,4 +1,6 @@
 import { FaRegTrashAlt } from 'react-icons/fa';
+import { MAX_PLAYERS, MIN_PLAYERS } from 'lib/constants';
+import { Player } from 'types/Players';
 import { PrimaryButton, SecondaryButton } from 'components/Button';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import classNames from 'classnames';
@@ -8,27 +10,21 @@ interface PlayerNameInputProps {
   resetForm: () => void;
 }
 
-const MIN_PLAYERS = 2;
-const MAX_PLAYERS = 21;
-
 export const PlayerNameInput = ({ nextFormStep, resetForm }: PlayerNameInputProps) => {
   const {
     control,
     register,
-    getValues,
     formState: { isValid },
-  } = useFormContext();
+  } = useFormContext<{ players: Player[] }>();
 
   const {
     fields: playerNamesFields,
     append,
     remove,
-  } = useFieldArray({
+  } = useFieldArray<{ players: Player[] }>({
     control,
     name: 'players',
   });
-  console.log(getValues('players'));
-  console.log(playerNamesFields.length);
 
   return (
     <div className="flex flex-col justify-center items-center space-y-4 w-72">
@@ -39,7 +35,7 @@ export const PlayerNameInput = ({ nextFormStep, resetForm }: PlayerNameInputProp
               className="font-bold text-primary outline-none focus:ring-offset-0 focus:border-secondary focus:ring-0 focus:ring-secondary rounded-md border w-full py-2 px-4"
               type="text"
               maxLength={10}
-              {...register(`players[${index}].name`, {
+              {...register(`players[${index}].name` as 'players', {
                 required: index < MIN_PLAYERS, // Only required for the first two inputs
               })}
               placeholder={`Player ${index + 1}`}
