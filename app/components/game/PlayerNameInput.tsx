@@ -14,7 +14,7 @@ export const PlayerNameInput = ({ nextFormStep, resetForm }: PlayerNameInputProp
   const {
     control,
     register,
-    formState: { isValid },
+    formState: { errors, isValid },
   } = useFormContext<{ players: Player[] }>();
 
   const {
@@ -24,37 +24,44 @@ export const PlayerNameInput = ({ nextFormStep, resetForm }: PlayerNameInputProp
   } = useFieldArray<{ players: Player[] }>({
     control,
     name: 'players',
+    rules: { minLength: 2 },
   });
 
   return (
     <div className="flex flex-col justify-center items-center space-y-4 w-72">
       <div className="flex flex-col space-y-4">
         {playerNamesFields.map((field, index) => (
-          <div key={field.id} className="flex items-center space-x-4">
-            <input
-              className="font-bold text-primary outline-none focus:ring-offset-0 focus:border-secondary focus:ring-0 focus:ring-secondary rounded-md border w-full py-2 px-4"
-              type="text"
-              maxLength={10}
-              {...register(`players[${index}].name` as 'players', {
-                required: index < MIN_PLAYERS, // Only required for the first two inputs
-              })}
-              placeholder={`Player ${index + 1}`}
-            />
-            <button
-              className={classNames({ 'opacity-50': playerNamesFields.length === MIN_PLAYERS })}
-              type="button"
-              onClick={() => remove(index)}
-              disabled={playerNamesFields.length === MIN_PLAYERS}
-            >
-              <FaRegTrashAlt />
-            </button>
+          <div className="space-y-1">
+            <div key={field.id} className="flex items-center space-x-4">
+              <input
+                className={classNames(
+                  { 'border-red-700': errors.players?.[index]?.name },
+                  'font-bold text-primary outline-none focus:ring-offset-0 focus:border-secondary focus:ring-0 focus:ring-secondary rounded-md border w-full py-2 px-4',
+                )}
+                type="text"
+                maxLength={10}
+                {...register(`players[${index}].name` as 'players', {
+                  required: true,
+                })}
+                placeholder={`Player ${index + 1}`}
+              />
+              <button
+                className={classNames({ 'opacity-50': playerNamesFields.length === MIN_PLAYERS })}
+                type="button"
+                onClick={() => remove(index)}
+                disabled={playerNamesFields.length === MIN_PLAYERS}
+              >
+                <FaRegTrashAlt />
+              </button>
+            </div>
+            {errors.players?.[index]?.name && <p className="text-xs">Player name is required.</p>}
           </div>
         ))}
         <PrimaryButton
           text="Add Player"
           onClick={() =>
             append({
-              name: '',
+              name: null,
               scores: {
                 level3: undefined,
                 level4: undefined,

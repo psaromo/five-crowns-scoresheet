@@ -1,18 +1,20 @@
+import { Scores } from 'types/Players';
+
 export const MIN_PLAYERS: number = 2;
 export const MAX_PLAYERS: number = 21;
 
-export const wildCards = [
-  { id: 'level3', display: '3' },
-  { id: 'level4', display: '4' },
-  { id: 'level5', display: '5' },
-  { id: 'level6', display: '6' },
-  { id: 'level7', display: '7' },
-  { id: 'level8', display: '8' },
-  { id: 'level9', display: '9' },
-  { id: 'level10', display: '10' },
-  { id: 'level11', display: 'J' },
-  { id: 'level12', display: 'Q' },
-  { id: 'level13', display: 'K' },
+export const wildCards: { level: keyof Scores; display: string }[] = [
+  { level: 'level3', display: '3' },
+  { level: 'level4', display: '4' },
+  { level: 'level5', display: '5' },
+  { level: 'level6', display: '6' },
+  { level: 'level7', display: '7' },
+  { level: 'level8', display: '8' },
+  { level: 'level9', display: '9' },
+  { level: 'level10', display: '10' },
+  { level: 'level11', display: 'J' },
+  { level: 'level12', display: 'Q' },
+  { level: 'level13', display: 'K' },
 ];
 
 export const rank: string[] = [
