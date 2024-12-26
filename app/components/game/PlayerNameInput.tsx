@@ -14,6 +14,7 @@ export const PlayerNameInput = ({ nextFormStep, resetForm }: PlayerNameInputProp
   const {
     control,
     register,
+    trigger,
     formState: { errors, isValid },
   } = useFormContext<{ players: Player[] }>();
 
@@ -59,7 +60,8 @@ export const PlayerNameInput = ({ nextFormStep, resetForm }: PlayerNameInputProp
         ))}
         <PrimaryButton
           text="Add Player"
-          onClick={() =>
+          onClick={() => {
+            trigger('players');
             append({
               name: null,
               scores: {
@@ -75,8 +77,8 @@ export const PlayerNameInput = ({ nextFormStep, resetForm }: PlayerNameInputProp
                 level12: undefined,
                 level13: undefined,
               },
-            })
-          }
+            });
+          }}
           disabled={playerNamesFields.length === MAX_PLAYERS}
         />
         <div className="flex space-x-4">
