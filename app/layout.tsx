@@ -25,12 +25,10 @@ export default function RootLayout({
     <html lang="en" className={`${cinzelDecorative.variable}`}>
       <body className="font-cinzel m-10">
         <div className="flex flex-col items-center justify-center space-y-5 my-10">
-          <div className="font-bold text-3xl whitespace-nowrap text-center">
-            Five Crowns Scoresheet
-          </div>
+          <div className="font-bold text-3xl text-center">Five Crowns Scoresheet</div>
           <Image alt="five-crowns-logo" src={'/five-crowns-logo.jpg'} width={300} height={100} />
         </div>
-        <div>{children}</div>
+        <div className="w-full">{children}</div>
       </body>
     </html>
   );

@@ -142,11 +142,13 @@ export default function Dashboard() {
           <div
             className={classNames(
               { hidden: formStep != formStates.indexOf('scoresheet') },
-              'flex flex-col justify-center items-start space-y-4 overflow-x-auto',
+              'flex flex-col justify-center items-center space-y-4 w-full',
             )}
           >
-            <Scoresheet />
-            <div className="flex space-x-4 absolute bottom-20">
+            <div className="overflow-auto overscroll-contain w-full flex justify-center items-center">
+              <Scoresheet />
+            </div>
+            <div className="flex space-x-4">
               <SecondaryButton text="Back" onClick={previousFormStep} />
               <PrimaryButton type="submit" text="Finish Game" disabled={!isValid} />
             </div>
@@ -156,7 +158,7 @@ export default function Dashboard() {
           <div
             className={classNames(
               { hidden: formStep != formStates.indexOf('end') },
-              'flex flex-col justify-center items-center space-y-4',
+              'flex flex-col justify-center items-center space-y-4 overflow-auto',
             )}
           >
             <div className="space-x-2 text-3xl">
