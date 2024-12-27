@@ -1,4 +1,7 @@
+export type GameFormValues = { players: Player[] };
+
 type Score = number | undefined;
+
 export interface Scores {
   level3: Score;
   level4: Score;
@@ -14,11 +17,6 @@ export interface Scores {
 }
 
 export interface Player {
-  id?: string;
-  name: string;
+  name: string | null;
   scores: Scores;
-}
-
-export interface PlayersRecord {
-  [key: string]: Player;
 }

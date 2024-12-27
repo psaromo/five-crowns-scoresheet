@@ -1,32 +1,70 @@
 'use client';
 
-import { calculateScoresAndSort, rank } from 'app/utils/utils';
+import { calculateScoresAndSort } from 'lib/utils';
 import { FormProvider, useForm } from 'react-hook-form';
-import { Player } from 'app/types/Players';
+import { GameFormValues } from 'types/Players';
 import { PlayerNameInput } from 'components/game/PlayerNameInput';
 import { PrimaryButton, SecondaryButton } from 'components/Button';
+import { rank } from 'lib/constants';
 import { Scoresheet } from 'components/game/Scoresheet';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import classNames from 'classnames';
 
-interface SortedPlayers {
-  name: string;
-  totalScore: number;
-}
-
 export default function Dashboard() {
-  const methods = useForm({
+  const methods = useForm<GameFormValues>({
     mode: 'all',
-    defaultValues: { players: [] },
+    defaultValues: {
+      players: [
+        {
+          name: null,
+          scores: {
+            level3: undefined,
+            level4: undefined,
+            level5: undefined,
+            level6: undefined,
+            level7: undefined,
+            level8: undefined,
+            level9: undefined,
+            level10: undefined,
+            level11: undefined,
+            level12: undefined,
+            level13: undefined,
+          },
+        },
+        {
+          name: null,
+          scores: {
+            level3: undefined,
+            level4: undefined,
+            level5: undefined,
+            level6: undefined,
+            level7: undefined,
+            level8: undefined,
+            level9: undefined,
+            level10: undefined,
+            level11: undefined,
+            level12: undefined,
+            level13: undefined,
+          },
+        },
+      ],
+    },
   });
 
   const {
-    getValues,
     setValue,
+    getValues,
     formState: { isValid },
     handleSubmit,
     reset,
   } = methods;
+
+  const [sortedPlayers, setSortedPlayers] = useState<
+    {
+      name: string | null;
+      totalScore: number;
+    }[]
+  >([]);
 
   const [formStep, setFormStep] = useState<number>(0);
   const formStates = ['start', 'scoresheet', 'end'];
@@ -43,48 +81,48 @@ export default function Dashboard() {
     reset();
   }, [reset]);
 
-  const submitGame = useCallback(() => {
-    setIsGameFinished(true);
-    nextFormStep();
-  }, []);
-
-  const playAgain = useCallback(() => {
-    const allPlayers: Player[] = getValues('players');
-    const updatedPlayers = allPlayers.map((player) => ({
-      ...player,
-      scores: {
-        level3: NaN,
-        level4: NaN,
-        level5: NaN,
-        level6: NaN,
-        level7: NaN,
-        level8: NaN,
-        level9: NaN,
-        level10: NaN,
-        level11: NaN,
-        level12: NaN,
-        level13: NaN,
-      },
-    }));
-    setValue('players', updatedPlayers as any);
-    setIsGameFinished(false);
-    previousFormStep();
-  }, []);
-
-  const [sortedPlayers, setSortedPlayers] = useState<SortedPlayers[]>([]);
-  const [isGameFinished, setIsGameFinished] = useState<boolean>(false);
-
-  useEffect(() => {
-    const results = getValues('players');
-    if (isGameFinished) {
-      const calculation = calculateScoresAndSort(results);
+  const submitForm = useCallback(
+    async (values: GameFormValues) => {
+      const { players } = values;
+      const calculation = calculateScoresAndSort(players);
       setSortedPlayers(calculation);
-    }
-  }, [isGameFinished]);
+      nextFormStep();
+    },
+    [calculateScoresAndSort, setSortedPlayers, nextFormStep],
+  );
+
+  const resetScores = useCallback(() => {
+    const players = getValues('players');
+    const updatedPlayersScores = players.map((player) => {
+      return {
+        name: player.name,
+        scores: {
+          level3: undefined,
+          level4: undefined,
+          level5: undefined,
+          level6: undefined,
+          level7: undefined,
+          level8: undefined,
+          level9: undefined,
+          level10: undefined,
+          level11: undefined,
+          level12: undefined,
+          level13: undefined,
+        },
+      };
+    });
+    setValue('players', updatedPlayersScores);
+    previousFormStep();
+  }, [getValues, setValue, previousFormStep]);
+
+  const restartGame = useCallback(() => {
+    resetForm();
+    setFormStep(0);
+  }, [reset, setFormStep]);
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(submitGame)} className="flex justify-center items-center">
+      <form onSubmit={handleSubmit(submitForm)} className="flex justify-center items-center">
         {currentAndPrevSteps.includes('start') && (
           <div
             className={classNames(
@@ -108,16 +146,9 @@ export default function Dashboard() {
             )}
           >
             <Scoresheet />
-            <div className="flex space-x-4 absolute bottom-0">
+            <div className="flex space-x-4 absolute bottom-20">
               <SecondaryButton text="Back" onClick={previousFormStep} />
-              <PrimaryButton
-                text="Finish Game"
-                disabled={!isValid}
-                onClick={() => {
-                  setIsGameFinished(true);
-                  nextFormStep();
-                }}
-              />
+              <PrimaryButton type="submit" text="Finish Game" disabled={!isValid} />
             </div>
           </div>
         )}
@@ -125,43 +156,34 @@ export default function Dashboard() {
           <div
             className={classNames(
               { hidden: formStep != formStates.indexOf('end') },
-              'flex flex-col justify-center items-start space-y-4',
+              'flex flex-col justify-center items-center space-y-4',
             )}
           >
-            {isGameFinished && (
-              <div className="space-y-4">
-                <div className="space-x-2 text-2xl">
-                  <span className="font-bold">Winner:</span>
-                  <span>{sortedPlayers[0]?.name} 🎉</span>
-                </div>
-                <table>
-                  <thead className="font-bold text-xl">
-                    <th className="">RANK</th>
-                    <th className="px-10">NAME</th>
-                    <th className="">SCORE</th>
-                  </thead>
-                  <tbody>
-                    {sortedPlayers.map((player, index) => (
-                      <tr key={player.name}>
-                        <td className="text-center">{rank[index]}</td>
-                        <td className="text-center">{player.name}</td>
-                        <td className="text-center">{player.totalScore}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-                <div className="flex space-x-4">
-                  <SecondaryButton
-                    text="Back"
-                    onClick={() => {
-                      setIsGameFinished(false);
-                      previousFormStep();
-                    }}
-                  />
-                  <PrimaryButton text="Play again" onClick={playAgain} />
-                </div>
-              </div>
-            )}
+            <div className="space-x-2 text-3xl">
+              <span className="font-bold">Winner:</span>
+              <span>{sortedPlayers[0]?.name} 🎉</span>
+            </div>
+            <table>
+              <thead className="font-bold text-xl">
+                <th className="">RANK</th>
+                <th className="px-10">NAME</th>
+                <th className="">SCORE</th>
+              </thead>
+              <tbody>
+                {sortedPlayers.map((player, index) => (
+                  <tr key={player.name} className="border-b text-lg">
+                    <td className="text-center p-2">{rank[index]}</td>
+                    <td className="text-center p-2">{player.name}</td>
+                    <td className="text-center p-2">{player.totalScore}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div className="flex space-x-4">
+              <SecondaryButton text="Back" onClick={previousFormStep} />
+              <PrimaryButton text="Reset scores" onClick={resetScores} />
+              <PrimaryButton text="Restart game" onClick={restartGame} />
+            </div>
           </div>
         )}
       </form>
