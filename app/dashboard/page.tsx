@@ -158,7 +158,7 @@ export default function Dashboard() {
           <div
             className={classNames(
               { hidden: formStep != formStates.indexOf('end') },
-              'flex flex-col justify-center items-center space-y-4 overflow-auto',
+              'flex flex-col justify-center items-center space-y-4',
             )}
           >
             <div className="space-x-2 text-3xl">
@@ -181,10 +181,18 @@ export default function Dashboard() {
                 ))}
               </tbody>
             </table>
-            <div className="flex space-x-4">
+            <div className="flex flex-col md:flex-row gap-4">
               <SecondaryButton text="Back" onClick={previousFormStep} />
-              <PrimaryButton text="Reset scores" onClick={resetScores} />
-              <PrimaryButton text="Restart game" onClick={restartGame} />
+              <PrimaryButton
+                text="Reset scores"
+                onClick={resetScores}
+                className="whitespace-nowrap"
+              />
+              <PrimaryButton
+                text="Restart game"
+                onClick={restartGame}
+                className="whitespace-nowrap"
+              />
             </div>
           </div>
         )}
