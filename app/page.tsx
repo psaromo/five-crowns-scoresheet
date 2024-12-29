@@ -129,8 +129,8 @@ export default function Home() {
       </Head>
       <main>
         <div className="flex flex-col items-center justify-center space-y-5 my-10">
-          <div className="font-bold text-3xl text-center">Five Crowns Scoresheet</div>
-          <Image alt="five-crowns-logo" src={'/five-crowns-logo.jpg'} width={300} height={100} />
+          <Image alt="five-crowns-logo" src={'/five-crowns-logo.jpg'} width={230} height={100} />
+          <p className="font-bold text-xl">Scoresheet Calculator</p>
         </div>
         <FormProvider {...methods}>
           <form onSubmit={handleSubmit(submitForm)} className="flex justify-center items-center">
