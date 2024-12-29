@@ -52,7 +52,7 @@ export const Scoresheet = () => {
                     errors.players?.[index]?.scores?.[level]
                       ? 'border-red-700'
                       : 'border-secondary',
-                    'font-bold text-primary outline-none border-2 focus:border-secondary rounded-md w-24 text-center',
+                    'font-bold text-primary outline-none border-2 focus:border-secondary rounded-md w-24 p-0.5 text-center',
                   )}
                   {...register(`players[${index}].scores.${level}` as 'players', {
                     valueAsNumber: true,
