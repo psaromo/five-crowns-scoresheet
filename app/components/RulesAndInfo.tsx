@@ -25,7 +25,10 @@ const RulesAndInfo = () => {
         </a>
       </div>
       <div className="flex justify-start items-center space-x-2">
-        <TbPlayCard /> <button onClick={() => setModalIsOpen(true)}>Card Values</button>
+        <TbPlayCard />{' '}
+        <button type="button" onClick={() => setModalIsOpen(true)}>
+          Card Values
+        </button>
       </div>
       <Modal
         {...{
