@@ -15,7 +15,7 @@ const config: Config = {
         secondary: { DEFAULT: '#fed26a' },
       },
       fontFamily: {
-        cinzel: ['var(--font-cinzelDecorative)'],
+        playfairDisplay: ['var(--font-playfairDisplay)'],
       },
     },
   },

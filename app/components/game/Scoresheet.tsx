@@ -41,7 +41,7 @@ export const Scoresheet = () => {
       <tbody>
         {wildCards.map(({ level, display }) => (
           <tr key={level}>
-            <td className="px-6 py-2 md:px-2 font-bold text-xl text-center sticky left-0 bg-primary border-b z-20">
+            <td className="md:px-6 py-2 px-2 font-bold text-xl text-center sticky left-0 bg-primary border-b z-20">
               {display}
             </td>
             {playersFields.map((field, index) => (
@@ -57,7 +57,6 @@ export const Scoresheet = () => {
                   {...register(`players[${index}].scores.${level}` as 'players', {
                     valueAsNumber: true,
                     min: 0,
-                    max: 50,
                   })}
                 />
               </td>

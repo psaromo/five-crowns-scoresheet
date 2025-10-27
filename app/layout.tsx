@@ -1,13 +1,13 @@
 import './globals.css';
-import { Cinzel_Decorative } from 'next/font/google';
+import { Playfair_Display } from 'next/font/google';
 import type { Metadata } from 'next';
 
-const cinzelDecorative = Cinzel_Decorative({
-  weight: ['400', '700', '900'],
-  style: ['normal'],
+const playfair_display = Playfair_Display({
+  weight: ['400', '500', '600', '700', '900'],
+  style: ['normal', 'italic'],
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-cinzelDecorative',
+  variable: '--font-playfairDisplay',
 });
 
 export const metadata: Metadata = {
@@ -29,8 +29,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${cinzelDecorative.variable}`}>
-      <body className="font-cinzel m-10">
+    <html lang="en" className={playfair_display.variable}>
+      <body className="font-playfairDisplay m-10">
         <main className="w-full">{children}</main>
       </body>
     </html>
