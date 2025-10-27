@@ -1,7 +1,6 @@
 import './globals.css';
 import { Playfair_Display } from 'next/font/google';
 import type { Metadata } from 'next';
-import localFont from 'next/font/local';
 
 const playfair_display = Playfair_Display({
   weight: ['400', '500', '600', '700', '900'],

@@ -11,6 +11,7 @@ import { useCallback, useState } from 'react';
 import classNames from 'classnames';
 import Head from 'next/head';
 import Image from 'next/image';
+import RulesAndInfo from 'components/RulesAndInfo';
 
 export default function Home() {
   const methods = useForm<GameFormValues>({
@@ -128,12 +129,15 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" sizes="any" />
       </Head>
       <main>
-        <div className="flex flex-col items-center justify-center space-y-5 my-10">
+        <div className="flex flex-col items-center justify-center space-y-5 my-5">
           <Image alt="five-crowns-logo" src={'/five-crowns-logo.jpg'} width={230} height={100} />
-          <p className="font-bold text-xl">Scoresheet Calculator</p>
+          <p className="font-bold text-xl md:text-3xl">Scoresheet Calculator</p>
         </div>
         <FormProvider {...methods}>
-          <form onSubmit={handleSubmit(submitForm)} className="flex justify-center items-center">
+          <form
+            onSubmit={handleSubmit(submitForm)}
+            className="flex flex-col justify-center items-center space-y-5"
+          >
             {currentAndPrevSteps.includes('start') && (
               <div
                 className={classNames(
@@ -207,6 +211,7 @@ export default function Home() {
                 </div>
               </div>
             )}
+            <RulesAndInfo />
           </form>
         </FormProvider>
       </main>
