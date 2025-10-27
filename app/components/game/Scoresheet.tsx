@@ -57,7 +57,6 @@ export const Scoresheet = () => {
                   {...register(`players[${index}].scores.${level}` as 'players', {
                     valueAsNumber: true,
                     min: 0,
-                    max: 50,
                   })}
                 />
               </td>
