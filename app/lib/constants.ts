@@ -1,7 +1,30 @@
-import { Scores } from 'types/Players';
+import { Player, Scores } from 'types/Players';
 
 export const MIN_PLAYERS: number = 2;
 export const MAX_PLAYERS: number = 21;
+
+export const EMPTY_SCORES: Scores = {
+  level3: undefined,
+  level4: undefined,
+  level5: undefined,
+  level6: undefined,
+  level7: undefined,
+  level8: undefined,
+  level9: undefined,
+  level10: undefined,
+  level11: undefined,
+  level12: undefined,
+  level13: undefined,
+};
+
+export const makeEmptyPlayer = (): Player => ({
+  name: null,
+  scores: { ...EMPTY_SCORES },
+});
+
+export const DEFAULT_FORM_VALUES = {
+  players: [makeEmptyPlayer(), makeEmptyPlayer()],
+};
 
 export const wildCards: { level: keyof Scores; display: string }[] = [
   { level: 'level3', display: '3' },
