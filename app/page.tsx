@@ -5,53 +5,20 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { GameFormValues } from 'types/Players';
 import { PlayerNameInput } from 'components/game/PlayerNameInput';
 import { PrimaryButton, SecondaryButton } from 'components/Button';
-import { rank } from 'lib/constants';
+import { rank, DEFAULT_FORM_VALUES, EMPTY_SCORES } from 'lib/constants';
 import { Scoresheet } from 'components/game/Scoresheet';
 import { useCallback, useState } from 'react';
+import { useGamePersistence } from 'hooks/useGamePersistence';
 import classNames from 'classnames';
 import Head from 'next/head';
 import Image from 'next/image';
 import RulesAndInfo from 'components/RulesAndInfo';
+import { Modal } from 'components/Modal';
 
 export default function Home() {
   const methods = useForm<GameFormValues>({
     mode: 'all',
-    defaultValues: {
-      players: [
-        {
-          name: null,
-          scores: {
-            level3: undefined,
-            level4: undefined,
-            level5: undefined,
-            level6: undefined,
-            level7: undefined,
-            level8: undefined,
-            level9: undefined,
-            level10: undefined,
-            level11: undefined,
-            level12: undefined,
-            level13: undefined,
-          },
-        },
-        {
-          name: null,
-          scores: {
-            level3: undefined,
-            level4: undefined,
-            level5: undefined,
-            level6: undefined,
-            level7: undefined,
-            level8: undefined,
-            level9: undefined,
-            level10: undefined,
-            level11: undefined,
-            level12: undefined,
-            level13: undefined,
-          },
-        },
-      ],
-    },
+    defaultValues: DEFAULT_FORM_VALUES,
   });
 
   const {
@@ -70,6 +37,16 @@ export default function Home() {
   >([]);
 
   const [formStep, setFormStep] = useState<number>(0);
+  const [restartModalOpen, setRestartModalOpen] = useState(false);
+
+  const { clearPersistedState, isHydrated } = useGamePersistence(
+    methods,
+    formStep,
+    sortedPlayers,
+    setFormStep,
+    setSortedPlayers,
+  );
+
   const formStates = ['start', 'scoresheet', 'end'];
   const currentAndPrevSteps = formStates.slice(0, formStep + 1);
 
@@ -79,10 +56,6 @@ export default function Home() {
   const previousFormStep = useCallback(() => {
     setFormStep((cur) => cur - 1);
   }, [setFormStep]);
-
-  const resetForm = useCallback(() => {
-    reset();
-  }, [reset]);
 
   const submitForm = useCallback(
     async (values: GameFormValues) => {
@@ -96,32 +69,20 @@ export default function Home() {
 
   const resetScores = useCallback(() => {
     const players = getValues('players');
-    const updatedPlayersScores = players.map((player) => {
-      return {
-        name: player.name,
-        scores: {
-          level3: undefined,
-          level4: undefined,
-          level5: undefined,
-          level6: undefined,
-          level7: undefined,
-          level8: undefined,
-          level9: undefined,
-          level10: undefined,
-          level11: undefined,
-          level12: undefined,
-          level13: undefined,
-        },
-      };
-    });
-    setValue('players', updatedPlayersScores);
+    const updatedPlayersScores = players.map((player) => ({
+      name: player.name,
+      scores: { ...EMPTY_SCORES },
+    }));
+    reset({ players: updatedPlayersScores });
     previousFormStep();
-  }, [getValues, setValue, previousFormStep]);
+  }, [getValues, reset, previousFormStep]);
 
-  const restartGame = useCallback(() => {
-    resetForm();
+  const resetForm = useCallback(() => {
+    clearPersistedState();
+    reset(DEFAULT_FORM_VALUES);
     setFormStep(0);
-  }, [reset, setFormStep]);
+    setSortedPlayers([]);
+  }, [clearPersistedState, reset, setFormStep, setSortedPlayers]);
 
   return (
     <>
@@ -136,7 +97,10 @@ export default function Home() {
         <FormProvider {...methods}>
           <form
             onSubmit={handleSubmit(submitForm)}
-            className="flex flex-col justify-center items-center space-y-5"
+            className={classNames(
+              { 'invisible': !isHydrated },
+              'flex flex-col justify-center items-center space-y-5',
+            )}
           >
             {currentAndPrevSteps.includes('start') && (
               <div
@@ -205,7 +169,7 @@ export default function Home() {
                   />
                   <PrimaryButton
                     text="Restart game"
-                    onClick={restartGame}
+                    onClick={() => setRestartModalOpen(true)}
                     className="whitespace-nowrap"
                   />
                 </div>
@@ -214,6 +178,19 @@ export default function Home() {
             <RulesAndInfo />
           </form>
         </FormProvider>
+        <Modal
+          modalIsOpen={restartModalOpen}
+          setModalIsOpen={setRestartModalOpen}
+          closeModal={() => setRestartModalOpen(false)}
+          title="Restart game?"
+          content={
+            <p className="text-center text-white/80 mt-3">
+              This will remove all players and scores. You'll start fresh from the beginning.
+            </p>
+          }
+          confirmButtonText="Yes, restart"
+          onConfirm={resetForm}
+        />
       </main>
     </>
   );

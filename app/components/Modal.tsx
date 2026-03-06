@@ -1,6 +1,6 @@
 import { Button, Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
-import { Dispatch, SetStateAction, useState } from 'react';
-import { PrimaryButton } from './Button';
+import { Dispatch, SetStateAction } from 'react';
+import { PrimaryButton, SecondaryButton } from './Button';
 
 interface ModalProps {
   modalIsOpen: boolean;
@@ -9,6 +9,7 @@ interface ModalProps {
   title: string;
   content: JSX.Element;
   confirmButtonText: string;
+  onConfirm?: () => void;
 }
 export const Modal = ({
   modalIsOpen,
@@ -17,7 +18,13 @@ export const Modal = ({
   title,
   content,
   confirmButtonText,
+  onConfirm,
 }: ModalProps) => {
+  const handleConfirm = () => {
+    onConfirm?.();
+    closeModal();
+  };
+
   return (
     <Dialog
       open={modalIsOpen}
@@ -25,7 +32,7 @@ export const Modal = ({
       className="relative z-20 focus:outline-none"
       onClose={closeModal}
     >
-      <div className="fixed inset-0 z-20 w-screen overflow-y-auto">
+      <div className="fixed inset-0 z-20 w-screen overflow-y-auto bg-black/40">
         <div className="flex min-h-full items-center justify-center p-4">
           <DialogPanel
             transition
@@ -37,8 +44,9 @@ export const Modal = ({
               </DialogTitle>
             </div>
             {content}
-            <div className="mt-4 flex items-center justify-center">
-              <PrimaryButton text={confirmButtonText} onClick={closeModal} />
+            <div className="mt-6 flex items-center justify-center gap-4">
+              <SecondaryButton text="Cancel" onClick={closeModal} />
+              <PrimaryButton text={confirmButtonText} onClick={handleConfirm} />
             </div>
           </DialogPanel>
         </div>

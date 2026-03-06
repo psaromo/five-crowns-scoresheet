@@ -1,4 +1,4 @@
-import { MAX_PLAYERS, MIN_PLAYERS } from 'lib/constants';
+import { MAX_PLAYERS, MIN_PLAYERS, makeEmptyPlayer } from 'lib/constants';
 import { FaRegTrashAlt } from 'react-icons/fa';
 import { GameFormValues } from 'types/Players';
 import { PrimaryButton, SecondaryButton } from 'components/Button';
@@ -62,22 +62,7 @@ export const PlayerNameInput = ({ nextFormStep, resetForm }: PlayerNameInputProp
           text="Add Player"
           onClick={() => {
             trigger('players');
-            append({
-              name: null,
-              scores: {
-                level3: undefined,
-                level4: undefined,
-                level5: undefined,
-                level6: undefined,
-                level7: undefined,
-                level8: undefined,
-                level9: undefined,
-                level10: undefined,
-                level11: undefined,
-                level12: undefined,
-                level13: undefined,
-              },
-            });
+            append(makeEmptyPlayer());
           }}
           disabled={playerNamesFields.length === MAX_PLAYERS}
         />
